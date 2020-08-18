@@ -6,6 +6,8 @@ import Profile from './screens/Profile'
 import Settings from './screens/Settings'
 
 import Login from './screens/Login';
+import Scanner from './screens/Scanner';
+
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -24,36 +26,56 @@ export default class Routes extends React.Component {
 
   render() {
     return (
-        <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{
-            headerShown: false,
-            headerTitleAlign: 'center',
-            headerStyle: { backgroundColor: '#c0d4e2' },
-          }}
-        />
-        <Stack.Screen
-        name="Home"
-        component= {Profile}
-        />
-        <Stack.Screen
-        name="Profile"
-        component= {Profile}
-        options={{
-          headerShown: false,
-          headerTitleAlign: 'center',
-          headerStyle: { backgroundColor: '#c0d4e2' },
-        }}
-        />
-        <Stack.Screen
-        name="Settings"
-        component= {Settings}
-        />
-      </Stack.Navigator>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{
+              headerShown: false,
+              headerTitleAlign: 'center',
+              headerStyle:
+              {
+                backgroundColor: '#c0d4e2'
+              },
+            }}
+          />
+
+          <Stack.Screen
+            name="Scanner"
+            component={Scanner}
+            options={{
+              headerShown: false,
+              headerTitleAlign: 'center',
+              headerStyle:
+              {
+                backgroundColor: '#c0d4e2'
+              },
+            }}
+          />
+
+<Stack.Screen
+      name="Profile"
+      component= {Profile}
+      options={{
+        headerShown: false,
+        headerTitleAlign: 'center',
+        headerStyle: { backgroundColor: '#c0d4e2' },
+      }}
+      />
+      <Stack.Screen
+      name="Settings"
+      component= {Settings}
+      />
+
+        </Stack.Navigator>
       </NavigationContainer>
     );
   }
 }
+
+
+
+
+
+

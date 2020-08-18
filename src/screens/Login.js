@@ -1,15 +1,15 @@
- import React, { Component } from 'react';
+import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
 import { View, StyleSheet, StatusBar, SafeAreaView,Image,TextInput,TouchableOpacity } from 'react-native';
 import { Text } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 
 class Login extends React.Component {
-  
+
   constructor(props) {
     super(props);
+  }
 
-  } 
   render() {
     return (
      <View style={Style.container}>
@@ -70,3 +70,24 @@ const Style = StyleSheet.create(
   }
 )
 
+{/* <TouchableOpacity
+        
+onPress={() => {this.props.navigation.navigate('Scanner')}}
+style={
+  [
+
+    {
+      backgroundColor: '#000',
+      borderRadius: 10,
+      //marginHorizontal: 50,
+      width: '92%', 
+      justifyContent: 'center',
+      alignItems: 'center'
+
+
+    }
+  ]
+}>
+  <Text style={{ color: '#fff', padding: 20, fontSize: 16 }}>Login</Text>
+
+</TouchableOpacity> */}

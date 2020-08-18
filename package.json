@@ -11,14 +11,24 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
+<<<<<<< HEAD
     "@react-navigation/drawer": "^5.9.0",
+=======
+    "@react-native-community/picker": "^1.6.6",
+>>>>>>> 0ad7f059b7e7e46cec50bdf2d5c2a2b7ada388b5
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
     "native-base": "^2.13.13",
     "react": "16.13.1",
     "react-native": "0.63.2",
+    "react-native-camera": "^3.36.0",
     "react-native-gesture-handler": "^1.7.0",
+<<<<<<< HEAD
     "react-native-keyboard-aware-scrollview": "^2.1.0",
+=======
+    "react-native-permissions": "^2.1.5",
+    "react-native-qrcode-scanner": "^1.4.1",
+>>>>>>> 0ad7f059b7e7e46cec50bdf2d5c2a2b7ada388b5
     "react-native-reanimated": "^1.12.0",
     "react-native-safe-area-context": "^3.1.4",
     "react-native-screens": "^2.10.1",
