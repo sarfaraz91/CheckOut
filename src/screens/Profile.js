@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
 import { View,Text,StyleSheet,Image, ImageBackground} from 'react-native';
 import { Icon } from 'native-base';
+import { color } from 'react-native-reanimated';
 class Profile extends React.Component{
 
     render(){
@@ -12,7 +13,7 @@ class Profile extends React.Component{
                     style={Style.BgHeader} 
                     >
                     <View>
-                    <Text style={{alignSelf:'center'}}>Jack and Dexter</Text>
+                    <Text style={{alignSelf:'center',color:'white'}}>Jack and Dexter</Text>
                     <Image style={Style.ProfileImage}  source={require('../assets/img/person.png')}/>
                     </View>    
 
@@ -20,32 +21,32 @@ class Profile extends React.Component{
 
                 <View style={Style.parentContainer}>
                     <View style={Style.childContainer}>
-                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Icon name="edit" type='Feather' style={Style.IconStyle} />
                     <Text style={Style.TextStyle}>Sarfaraz Malik</Text>
                     </View>
 
                     <View style={Style.childContainer}>
-                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Icon name="edit" type='Feather' style={Style.IconStyle} />
                     <Text style={Style.TextStyle}>11 Jan 1991</Text>
                     </View>
 
                     <View style={Style.childContainer}>
-                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Icon name="edit" type='Feather' style={Style.IconStyle} />
                     <Text style={Style.TextStyle}>+92 3359959</Text>
                     </View>
 
                     <View style={Style.childContainer}>
-                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Icon name="edit" type='Feather' style={Style.IconStyle} />
                     <Text style={Style.TextStyle}>Instagram</Text>
                     </View>
 
                     <View style={Style.childContainer}>
-                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Icon name="edit" type='Feather' style={Style.IconStyle} />
                     <Text style={Style.TextStyle}>abc@gmail.com</Text>
                     </View>
 
                     <View style={Style.childContainer}>
-                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Icon name="edit" type='Feather' style={Style.IconStyle} />
                     <Text style={Style.TextStyle}>Password</Text>
                     </View>
                 </View>
@@ -80,7 +81,7 @@ const Style = StyleSheet.create(
     parentContainer:{
         flex:0.7,
         flexDirection:'column',
-        marginTop:40
+        marginTop:80
     },
     childContainer:{
         alignItems:'center',
@@ -91,9 +92,13 @@ const Style = StyleSheet.create(
     },
     TextStyle:{
         color:'#006400',
-        fontSize:18,
+        fontSize:14,
         textAlign:'center',
         marginLeft:50
     },
+    IconStyle:{
+        fontSize:20,
+        color:'#006400'
+    }
 }
   )
