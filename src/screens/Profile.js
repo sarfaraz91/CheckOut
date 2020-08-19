@@ -1,21 +1,55 @@
 import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
 import { View,Text,StyleSheet,Image, ImageBackground} from 'react-native';
-
+import { Icon } from 'native-base';
 class Profile extends React.Component{
 
     render(){
         return(
             <View style={Style.container}>
-                <View style={Style.header}>
-                    <ImageBackground
-                    source={require('../assets/img/curved_header.png')}
-                    style={Style.ImageBackground} 
+
+                    <View
+                    style={Style.BgHeader} 
                     >
-                    <Text style={Style.TextStyle}>gewrerwe</Text>
-                    <Image style={Style.Image}  source={require('../assets/img/person.png')}/>
-                    </ImageBackground>
+                    <View>
+                    <Text style={{alignSelf:'center'}}>Jack and Dexter</Text>
+                    <Image style={Style.ProfileImage}  source={require('../assets/img/person.png')}/>
+                    </View>    
+
+                    </View>
+
+                <View style={Style.parentContainer}>
+                    <View style={Style.childContainer}>
+                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Text style={Style.TextStyle}>Sarfaraz Malik</Text>
+                    </View>
+
+                    <View style={Style.childContainer}>
+                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Text style={Style.TextStyle}>11 Jan 1991</Text>
+                    </View>
+
+                    <View style={Style.childContainer}>
+                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Text style={Style.TextStyle}>+92 3359959</Text>
+                    </View>
+
+                    <View style={Style.childContainer}>
+                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Text style={Style.TextStyle}>Instagram</Text>
+                    </View>
+
+                    <View style={Style.childContainer}>
+                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Text style={Style.TextStyle}>abc@gmail.com</Text>
+                    </View>
+
+                    <View style={Style.childContainer}>
+                    <Icon name="edit" type='Feather' style={{ fontSize: 33, color: '#006400' }} />
+                    <Text style={Style.TextStyle}>Password</Text>
+                    </View>
                 </View>
+
             </View>
             
         )
@@ -30,31 +64,36 @@ const Style = StyleSheet.create(
           flex:1,
           backgroundColor:'white'
       },
-      header:{
-          flex:1
-      },
-      ImageBackground:{
-          flex:1,
+      BgHeader:{
+          flex: 0.3,
           alignItems:'center',
-          justifyContent:'center',
-          width:'100%',
-          height:'105%',
-          marginTop:-150
+          borderBottomLeftRadius: 130,
+          borderBottomRightRadius: 130,
+          backgroundColor: "#8BC080",
       },
-      Image:{
-        width:'100%',
-        height:'60%',
-        justifyContent:'center',
+      ProfileImage:{
+        width:500,
+        height:500,
+        marginTop:60
+    },
+    
+    parentContainer:{
+        flex:0.7,
+        flexDirection:'column',
+        marginTop:40
+    },
+    childContainer:{
         alignItems:'center',
-        marginLeft:20,
-        marginTop:-80
+        flexDirection:'row',
+        borderBottomColor: '#F5F5F5',
+        borderBottomWidth: 1,
+        padding:10
     },
     TextStyle:{
-        color:'white',
-        fontSize:28,
-        marginTop:80,
-        justifyContent:'center'
-    }
-     
-    }
+        color:'#006400',
+        fontSize:18,
+        textAlign:'center',
+        marginLeft:50
+    },
+}
   )
