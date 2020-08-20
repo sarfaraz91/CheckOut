@@ -7,6 +7,9 @@ import Settings from './screens/Settings'
 
 import Login from './screens/Login';
 import Scanner from './screens/Scanner';
+import CreateAccount from './screens/CreateAccount';
+
+
 
 
 const Stack = createStackNavigator();
@@ -15,10 +18,10 @@ const Drawer = createDrawerNavigator();
 export default class Routes extends React.Component {
 
   _getDrawerComponent() {
-    return(
+    return (
       <Drawer.Navigator>
-        <Drawer.Screen name="Profile" component={Profile}/>
-        <Drawer.Screen name="Settings" component={Settings}/>
+        <Drawer.Screen name="Profile" component={Profile} />
+        <Drawer.Screen name="Settings" component={Settings} />
         <Drawer.Screen />
       </Drawer.Navigator>
     )
@@ -54,19 +57,28 @@ export default class Routes extends React.Component {
             }}
           />
 
-<Stack.Screen
-      name="Profile"
-      component= {Profile}
-      options={{
-        headerShown: false,
-        headerTitleAlign: 'center',
-        headerStyle: { backgroundColor: '#c0d4e2' },
-      }}
-      />
-      <Stack.Screen
-      name="Settings"
-      component= {Settings}
-      />
+          <Stack.Screen
+            name="Profile"
+            component={Profile}
+            options={{
+              headerShown: false,
+              headerTitleAlign: 'center',
+              headerStyle: { backgroundColor: '#c0d4e2' },
+            }}
+          />
+          <Stack.Screen
+            name="Settings"
+            component={Settings}
+          />
+          <Stack.Screen
+            name="CreateAccount"
+            component={CreateAccount}
+            options={{
+              headerShown: false,
+              headerTitleAlign: 'center',
+              headerStyle: { backgroundColor: '#c0d4e2' },
+            }}
+          />
 
         </Stack.Navigator>
       </NavigationContainer>
