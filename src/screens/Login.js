@@ -18,7 +18,7 @@ class Login extends React.Component {
         <TextInput underlineColorAndroid='transparent' placeholderTextColor='black' placeholder="Password" style={Style.input}></TextInput>
         <View style={Style.btnContainer}>
           <TouchableOpacity style={Style.btnStyle}
-          onPress={()=> this.props.navigation.navigate('Profile')}
+          onPress={()=> this.props.navigation.navigate('MyDrawer')}
           >
             <Text style={Style.btnText}>Create Account</Text>
           </TouchableOpacity>

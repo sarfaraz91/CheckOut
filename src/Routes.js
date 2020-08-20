@@ -7,6 +7,7 @@ import Settings from './screens/Settings'
 
 import Login from './screens/Login';
 import Scanner from './screens/Scanner';
+import MenuSlider from './screens/Scanner'
 
 
 const Stack = createStackNavigator();
@@ -16,10 +17,11 @@ export default class Routes extends React.Component {
 
   _getDrawerComponent() {
     return(
-      <Drawer.Navigator>
-        <Drawer.Screen name="Profile" component={Profile}/>
-        <Drawer.Screen name="Settings" component={Settings}/>
-        <Drawer.Screen />
+    <Drawer.Navigator >
+      <Drawer.Screen name="Home" component={Scanner}/>
+      <Drawer.Screen name="Profile" component={Profile}/>
+      <Drawer.Screen name="Settings" component={Settings}/>
+         
       </Drawer.Navigator>
     )
   }
@@ -42,32 +44,13 @@ export default class Routes extends React.Component {
           />
 
           <Stack.Screen
-            name="Scanner"
-            component={Scanner}
-            options={{
-              headerShown: false,
-              headerTitleAlign: 'center',
-              headerStyle:
-              {
-                backgroundColor: '#c0d4e2'
-              },
-            }}
-          />
+          name="MyDrawer"
+          component={this._getDrawerComponent}
+          options={{ headerShown: false }}
+        />
 
-<Stack.Screen
-      name="Profile"
-      component= {Profile}
-      options={{
-        headerShown: false,
-        headerTitleAlign: 'center',
-        headerStyle: { backgroundColor: '#c0d4e2' },
-      }}
-      />
-      <Stack.Screen
-      name="Settings"
-      component= {Settings}
-      />
 
+      
         </Stack.Navigator>
       </NavigationContainer>
     );
