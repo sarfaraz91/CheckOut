@@ -7,7 +7,9 @@ import Settings from './screens/Settings'
 
 import Login from './screens/Login';
 import Scanner from './screens/Scanner';
-import MenuSlider from './screens/Scanner'
+import CreateAccount from './screens/CreateAccount';
+
+
 
 
 const Stack = createStackNavigator();
@@ -49,7 +51,15 @@ export default class Routes extends React.Component {
           options={{ headerShown: false }}
         />
 
-
+          <Stack.Screen
+            name="CreateAccount"
+            component={CreateAccount}
+            options={{
+              headerShown: false,
+              headerTitleAlign: 'center',
+              headerStyle: { backgroundColor: '#c0d4e2' },
+            }}
+          />
       
         </Stack.Navigator>
       </NavigationContainer>

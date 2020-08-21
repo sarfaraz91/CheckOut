@@ -12,7 +12,7 @@ class Profile extends React.Component{
                     <View
                     style={Style.BgHeader} 
                     >
-                    <View>
+                    <View style={{flex: 1}}>
                     <Text style={{alignSelf:'center',color:'white'}}>Jack and Dexter</Text>
                     <Image style={Style.ProfileImage}  source={require('../assets/img/person.png')}/>
                     </View>    
@@ -66,7 +66,7 @@ const Style = StyleSheet.create(
           backgroundColor:'#f2f2f2'
       },
       BgHeader:{
-          flex: 0.3,
+          height: 200,
           alignItems:'center',
           borderBottomLeftRadius: 100,
           borderBottomRightRadius: 100,

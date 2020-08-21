@@ -11,57 +11,56 @@ import { Text } from 'react-native';
 
 
 
-export default class Login extends Component {
+export default class CreateAccount extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      initializing: true,
-      user: {},
-      isLoading: false,
-      username: '',
-      password: '',
-    }
-
+   this.state = {
+   //  initializing: true,
+     //user: {},
+     isLoading: false,
+     username: '',
+     password: '',
+   }
+ 
   }
 
-  loginTouch() {
+  CreateAccount() {
 
     if (this.state.username.length == 0) {
       ViewUtils.showToast('Please Enter Username');
       return
     }
-
+    
     if (this.state.password.length == 0) {
       ViewUtils.showToast('Please Enter Password');
       return
-
+    
     }
     this.setState({ isLoading: true })
-
+  
     auth()
-      .signInWithEmailAndPassword(this.state.username, this.state.password)
-      .then(() => {
+    .createUserWithEmailAndPassword(this.state.username, this.state.password)
+    .then(() => {
 
-        this.props.navigation.navigate('MyDrawer')
+      this.props.navigation.navigate('Profile')
+      ViewUtils.showToast('User account created & signed in!!');
+    })
+    .catch(error => {
+      if (error.code === 'auth/email-already-in-use') {
+        console.log('That email address is already in use!');
+      }
+  
+      if (error.code === 'auth/invalid-email') {
+        console.log('That email address is invalid!');
+      }
+  
+      console.error(error);
+    })
 
-        ViewUtils.showToast('You are logged in Successfully!')
-
-      })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-        }
-
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-        }
-
-        console.error(error);
-      })
-      .finally(() => {
-        this.setState({ isLoading: false });
-      });
+    .finally(() => {
+      this.setState({ isLoading: true });
+  });
 
   }
 
@@ -85,28 +84,31 @@ export default class Login extends Component {
       <View style={Style.container}>
         <Image style={Style.logo} source={require('../assets/img/checkout_logo.png')}></Image>
         <TextInput
-         value={this.state.username}
-         onChangeText={val => this.setState({ username: val })}
+        value={this.state.username}
+        onChangeText={val => this.setState({ username: val })}
         underlineColorAndroid='transparent' placeholderTextColor='black' placeholder="Username" style={Style.input}></TextInput>
-        <TextInput 
-         value={this.state.password}
-         onChangeText={val => this.setState({ password: val })}
+        <TextInput
+        value={this.state.password}
+        onChangeText={val => this.setState({ password: val })}
         underlineColorAndroid='transparent' placeholderTextColor='black' placeholder="Password" style={Style.input}></TextInput>
         <View style={Style.btnContainer}>
           <TouchableOpacity style={Style.btnStyle}
-            onPress={this.loginTouch.bind(this)}
+            onPress={this.CreateAccount.bind(this) }
           >
-            <Text style={Style.btnText}>Login</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-
-            onPress={() => { this.props.navigation.navigate('CreateAccount') }}
-            style={Style.btnStyle}>
             <Text style={Style.btnText}>Create Account</Text>
           </TouchableOpacity>
+
+       
+         
         </View>
-        <Loader loading={this.state.isLoading} />
+
+      
+
+
+     
       </View>
+
+      
     );
   }
 }

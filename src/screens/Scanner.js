@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
 import { View, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
 import {
-    
+
     Text,
     TouchableOpacity,
     Linking
@@ -10,6 +10,47 @@ import {
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
+
+
+class Scanner extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    onSuccess = e => {
+        Linking.openURL(e.data).catch(err =>
+            console.error('An error occured', err)
+        );
+    };
+
+
+    render() {
+        return (
+            <View style={[CommonStyles.container]}>
+
+                <QRCodeScanner
+                    onRead={this.onSuccess}
+                    // flashMode={RNCamera.Constants.FlashMode.torch}
+                    topContent={
+                        <Text style={styles.centerText}>
+                            Go to{' '}
+                            <Text style={styles.textBold}>e</Text> on
+            your computer and scan the QR code.
+          </Text>
+                    }
+                    bottomContent={
+                        <TouchableOpacity style={styles.buttonTouchable}>
+                            <Text style={styles.buttonText}>OK. Got it!</Text>
+                        </TouchableOpacity>
+                    }
+                />
+            </View>
+        );
+    }
+}
+
+export default Scanner;
 
 const styles = StyleSheet.create({
     centerText: {
@@ -30,44 +71,3 @@ const styles = StyleSheet.create({
         padding: 16
     }
 });
-
-
-class Scanner extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
-
-    onSuccess = e => {
-        Linking.openURL(e.data).catch(err =>
-            console.error('An error occured', err)
-        );
-    };
-
-
-    render() {
-        return (
-            <View style={[CommonStyles.container, { backgroundColor: 'red' }]}>
-
-                <QRCodeScanner
-                    onRead={this.onSuccess}
-                    flashMode={RNCamera.Constants.FlashMode.torch}
-                    topContent={
-                        <Text style={styles.centerText}>
-                            Go to{' '}
-                            <Text style={styles.textBold}>e</Text> on
-            your computer and scan the QR code.
-          </Text>
-                    }
-                    bottomContent={
-                        <TouchableOpacity style={styles.buttonTouchable}>
-                            <Text style={styles.buttonText}>OK. Got it!</Text>
-                        </TouchableOpacity>
-                    }
-                />
-            </View>
-        );
-    }
-}
-
-export default Scanner;
