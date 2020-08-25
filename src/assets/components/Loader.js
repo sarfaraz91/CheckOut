@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-    StyleSheet,
-    View,
-    Modal,
-    ActivityIndicator,
-    StatusBar
-} from 'react-native';
+import {StyleSheet, View, Modal, ActivityIndicator, StatusBar} from 'react-native';
 
 const Loader = props => {
     const {
@@ -24,8 +18,7 @@ const Loader = props => {
                 <View style={styles.activityIndicatorWrapper}>
                     <ActivityIndicator
                         animating={loading} color='#297dec' size='large'/>
-                    <StatusBar translucent backgroundColor='#000040' barStyle={'dark-content'} />
-         
+        
                 </View>
             </View>
         </Modal>

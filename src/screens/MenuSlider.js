@@ -4,8 +4,6 @@ import { Container, Content, Icon, Item, Label } from 'native-base';
 import { FlatGrid } from 'react-native-super-grid'
 import CommonStyles from '../../CommonStyles';
 
-
-
 class MenuSlider extends React.Component {
 
     constructor() {
@@ -19,9 +17,6 @@ class MenuSlider extends React.Component {
     componentDidMount() {
 
     }
-
-
-
     render() {
 
         const menuComponents = [
@@ -30,7 +25,6 @@ class MenuSlider extends React.Component {
             { name: 'Settings', iconName: 'medicinebox', iconFamily: 'AntDesign', iconSize: '18', route: 'Settings' },
 
         ];
-
 
         return (
             <View style={[CommonStyles.container, CommonStyles.padding, { backgroundColor: '#F7FAFE' }]}>

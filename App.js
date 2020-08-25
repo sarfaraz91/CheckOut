@@ -14,8 +14,6 @@ import { View, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
 
 
 class App extends React.Component {
-
-
   constructor(props) {
     super(props);
 

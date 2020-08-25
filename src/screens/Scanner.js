@@ -1,19 +1,11 @@
 import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
 import { View, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
-import {
-
-    Text,
-    TouchableOpacity,
-    Linking
-} from 'react-native';
-
+import {Text, TouchableOpacity, Linking} from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 
-
 class Scanner extends React.Component {
-
     constructor(props) {
         super(props);
     }
@@ -24,11 +16,9 @@ class Scanner extends React.Component {
         );
     };
 
-
     render() {
         return (
             <View style={[CommonStyles.container]}>
-
                 <QRCodeScanner
                     onRead={this.onSuccess}
                     // flashMode={RNCamera.Constants.FlashMode.torch}
@@ -40,6 +30,7 @@ class Scanner extends React.Component {
           </Text>
                     }
                     bottomContent={
+                        
                         <TouchableOpacity style={styles.buttonTouchable}>
                             <Text style={styles.buttonText}>OK. Got it!</Text>
                         </TouchableOpacity>
@@ -54,7 +45,6 @@ export default Scanner;
 
 const styles = StyleSheet.create({
     centerText: {
-        flex: 1,
         fontSize: 18,
         padding: 32,
         color: '#777'
@@ -68,6 +58,6 @@ const styles = StyleSheet.create({
         color: 'rgb(0,122,255)'
     },
     buttonTouchable: {
-        padding: 16
+        padding: 18, 
     }
 });

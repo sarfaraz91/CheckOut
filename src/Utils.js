@@ -22,7 +22,7 @@ class ViewUtils {
     okClick,
     cancelClick = null,
     okText = 'Ok',
-    title = 'Check Out',
+    title = 'Check  Out',
   ) {
     let cancel = null;
     if (cancelClick) {
