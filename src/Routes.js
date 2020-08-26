@@ -35,7 +35,7 @@ export default class Routes extends React.Component {
       <NavigationContainer>
         <Stack.Navigator>
 
-        {/* <Stack.Screen
+        <Stack.Screen
             name="Login"
             component={Login}
             options={{
@@ -59,7 +59,7 @@ export default class Routes extends React.Component {
                 backgroundColor: '#c0d4e2'
               },
             }}
-          /> */}
+          />
 
           <Stack.Screen
             name="MyDrawer"
