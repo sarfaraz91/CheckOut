@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
-import { View, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
-import {Text, TouchableOpacity, Linking} from 'react-native';
+import {Icon} from 'native-base';
+import { View, StyleSheet, StatusBar, SafeAreaView, Text, TouchableOpacity, Linking } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 
@@ -18,7 +18,7 @@ class Scanner extends React.Component {
 
     render() {
         return (
-            <View style={[CommonStyles.container]}>
+            <View style={[CommonStyles.container, { backgroundColor: '#F7FAFE' }]}>
                 <QRCodeScanner
                     onRead={this.onSuccess}
                     // flashMode={RNCamera.Constants.FlashMode.torch}
@@ -30,12 +30,30 @@ class Scanner extends React.Component {
           </Text>
                     }
                     bottomContent={
-                        
+
                         <TouchableOpacity style={styles.buttonTouchable}>
                             <Text style={styles.buttonText}>OK. Got it!</Text>
                         </TouchableOpacity>
                     }
                 />
+
+                <View
+                    style={[
+                        {
+                            position: 'absolute',
+                            left: 17,
+                            top: 20,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        },
+                    ]}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.navigation.openDrawer();
+                        }}>
+                        <Icon name="bars" type='AntDesign' size={21} color="#303030" />
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
@@ -47,7 +65,9 @@ const styles = StyleSheet.create({
     centerText: {
         fontSize: 18,
         padding: 32,
-        color: '#777'
+        color: '#777',
+        marginTop: 10
+        
     },
     textBold: {
         fontWeight: '500',
@@ -58,6 +78,6 @@ const styles = StyleSheet.create({
         color: 'rgb(0,122,255)'
     },
     buttonTouchable: {
-        padding: 18, 
+        padding: 18,
     }
 });
