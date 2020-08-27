@@ -5,11 +5,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import auth from '@react-native-firebase/auth';
 import Loader from '.././assets/components/Loader';
 import { ViewUtils } from '../Utils'
-
-
 import { Text } from 'react-native';
-
-
 
 export default class Login extends Component {
 
@@ -22,11 +18,9 @@ export default class Login extends Component {
       username: '',
       password: '',
     }
-
   }
 
   loginTouch() {
-
     if (this.state.username.length == 0) {
       ViewUtils.showToast('Please Enter Username');
       return
@@ -50,11 +44,13 @@ export default class Login extends Component {
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
+          ViewUtils.showToast('That email address is already in use!')
+        
         }
 
         if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
+          ViewUtils.showToast('That email address is invalid!')
+      
         }
 
         console.error(error);
@@ -62,50 +58,50 @@ export default class Login extends Component {
       .finally(() => {
         this.setState({ isLoading: false });
       });
-
   }
-
-  // onAuthStateChanged(user) {
-  //   setUser(user)
-  //   this.setState({
-  //     initializing: false
-  //   })
-  // }
-
-  // signout() {
-  //   const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-  //   return subscriber; // unsubscribe on unmount
-  // }
-
-
-
 
   render() {
     return (
-      <View style={Style.container}>
-        <Image style={Style.logo} source={require('../assets/img/checkout_logo.png')}></Image>
-        <TextInput
-         value={this.state.username}
-         onChangeText={val => this.setState({ username: val })}
-        underlineColorAndroid='transparent' placeholderTextColor='black' placeholder="Username" style={Style.input}></TextInput>
-        <TextInput 
-         value={this.state.password}
-         onChangeText={val => this.setState({ password: val })}
-        underlineColorAndroid='transparent' placeholderTextColor='black' placeholder="Password" style={Style.input}></TextInput>
-        <View style={Style.btnContainer}>
-          <TouchableOpacity style={Style.btnStyle}
-            onPress={this.loginTouch.bind(this)}
-          >
-            <Text style={Style.btnText}>Login</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+      <View style={[CommonStyles.container, CommonStyles.bgColor ]}>
+        <KeyboardAwareScrollView style={[CommonStyles.container]}>
 
-            onPress={() => { this.props.navigation.navigate('CreateAccount') }}
-            style={Style.btnStyle}>
-            <Text style={Style.btnText}>Create Account</Text>
-          </TouchableOpacity>
-        </View>
-        <Loader loading={this.state.isLoading} />
+          <Image style={[CommonStyles.container, Style.logo, {marginVertical: 50}]} source={require('../assets/img/checkout_logo.png')}></Image>
+          <TextInput
+            value={this.state.username}
+            onChangeText={val => this.setState({ username: val })}
+            underlineColorAndroid='transparent'
+            placeholderTextColor='black'
+            placeholder="Username"
+            enablesReturnKeyAutomatically
+            autoCapitalize='none'
+            style={Style.input}>
+            </TextInput>
+          <TextInput
+            value={this.state.password}
+            onChangeText={val => this.setState({ password: val })}
+            underlineColorAndroid='transparent'
+            placeholderTextColor='black'
+            placeholder="Password"
+            autoCapitalize='none'
+            secureTextEntry
+            style={Style.input}></TextInput>
+          <View style={Style.btnContainer}>
+            <TouchableOpacity style={Style.btnStyle}
+              onPress={this.loginTouch.bind(this)}
+            >
+              <Text style={Style.btnText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+
+              onPress={() => { this.props.navigation.navigate('CreateAccount') }}
+              style={Style.btnStyle}>
+              <Text style={Style.btnText}>Create Account</Text>
+            </TouchableOpacity>
+          </View>
+          <Loader loading={this.state.isLoading} />
+
+        </KeyboardAwareScrollView>
+
       </View>
     );
   }
@@ -115,56 +111,38 @@ const Style = StyleSheet.create(
   {
     container: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
       backgroundColor: 'white'
     },
     logo: {
       width: 300,
       height: 150,
+      alignSelf: 'center'
     },
     input: {
       marginTop: 5,
       width: '90%',
       padding: 15,
       borderBottomColor: '#F5F5F5',
-      borderBottomWidth: 1,
+      borderBottomWidth: 2,
+      fontSize: 15, 
+      alignSelf: 'center'
     },
     btnContainer: {
       width: '90%',
-      marginTop: 50,
-      flexDirection: 'column'
+      marginTop: 70,
+      alignSelf: 'center',
     },
     btnStyle: {
-      padding: 7,
-      marginTop: 10,
-      backgroundColor: '#F5F5F5'
+      marginVertical: 10,
+      backgroundColor: '#F5F5F5',
+      borderRadius: 5
     },
     btnText: {
       textAlign: 'center',
-      color: '#006400'
+      color: '#8BC080',
+      fontSize: 20,
+      padding: 10,
+      fontWeight: 'bold'
     }
   }
 )
-
-{/* <TouchableOpacity
-        
-onPress={() => {this.props.navigation.navigate('Scanner')}}
-style={
-  [
-
-    {
-      backgroundColor: '#000',
-      borderRadius: 10,
-      //marginHorizontal: 50,
-      width: '92%', 
-      justifyContent: 'center',
-      alignItems: 'center'
-
-
-    }
-  ]
-}>
-  <Text style={{ color: '#fff', padding: 20, fontSize: 16 }}>Login</Text>
-
-</TouchableOpacity> */}

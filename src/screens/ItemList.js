@@ -4,13 +4,12 @@ import { Container, Content, Icon, Item, Label } from 'native-base';
 
 import CommonStyles from '../CommonStyles';
 
-class MenuSlider extends React.Component {
+class ItemList extends React.Component {
 
     constructor() {
         super();
         this.state = {
             isLoading: false,
-            role: ''
         }
     }
 
@@ -27,17 +26,17 @@ class MenuSlider extends React.Component {
         ];
 
         return (
-            <View style={[CommonStyles.container, CommonStyles.padding, { backgroundColor: '#F7FAFE' }]}>
+            <View style={[ { backgroundColor: '#F7FAFE',  alignItems: 'center', flex: 1}]}>
 
                 <View
                     style={[CommonStyles.padding, CommonStyles.mtt10]} >
-                    <Label style={[CommonStyles.fontBold, CommonStyles.textSizeLarge]}>Check Out</Label>
+                    <Label style={[CommonStyles.fontBold, CommonStyles.textSizeLarge]}>Item List</Label>
                 </View>
 
 
                 <FlatList
                     data={menuComponents}
-                    style={{ flex: 1, marginTop: 5 }}
+                    //style={{ marginTop: 5 }}
                     renderItem={({ item, index }) =>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate(`${item.route}`)}>
                             <View style={[CommonStyles.container,
@@ -60,4 +59,4 @@ class MenuSlider extends React.Component {
     }
 }
 
-export default MenuSlider;
+export default ItemList;
