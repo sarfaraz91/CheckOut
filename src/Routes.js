@@ -10,7 +10,7 @@ import ItemList from './screens/ItemList'
 import Login from './screens/Login';
 import Scanner from './screens/Scanner';
 import CreateAccount from './screens/CreateAccount';
-
+import Bill from './screens/Bill';
 
 
 
@@ -70,6 +70,16 @@ export default class Routes extends React.Component {
           <Stack.Screen
             name="CreateAccount"
             component={CreateAccount}
+            options={{
+              headerShown: false,
+              headerTitleAlign: 'center',
+              headerStyle: { backgroundColor: '#c0d4e2' },
+            }}
+          />
+          
+          <Stack.Screen
+            name="Bill"
+            component={Bill}
             options={{
               headerShown: false,
               headerTitleAlign: 'center',

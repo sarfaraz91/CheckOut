@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
-import {Icon} from 'native-base';
+import { Icon } from 'native-base';
 import { View, StyleSheet, StatusBar, SafeAreaView, Text, TouchableOpacity, Linking } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
+import { BackHandler, Alert } from 'react-native';
 
 class Scanner extends React.Component {
     constructor(props) {
@@ -11,9 +12,12 @@ class Scanner extends React.Component {
     }
 
     onSuccess = e => {
-        Linking.openURL(e.data).catch(err =>
+        Linking.openURL(e.data).catch(err => {
             console.error('An error occured', err)
-        );
+            console.warn('DATA', e.data)
+            this.props.navigation.navigate('Bill',{data:e.data});
+        });
+
     };
 
     render() {
@@ -49,6 +53,7 @@ class Scanner extends React.Component {
                     ]}>
                     <TouchableOpacity
                         onPress={() => {
+                            BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
                             this.props.navigation.openDrawer();
                         }}>
                         <Icon name="bars" type='AntDesign' size={21} color="#303030" />
@@ -57,6 +62,33 @@ class Scanner extends React.Component {
             </View>
         );
     }
+
+    handleBackButton = () => {
+        Alert.alert(
+            'Exit App',
+            'Exiting the application?', [{
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+            }, {
+                text: 'OK',
+                onPress: () => BackHandler.exitApp()
+            },], {
+            cancelable: false
+        }
+        )
+        return true;
+    }
+
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+    }
+
 }
 
 export default Scanner;
@@ -67,7 +99,7 @@ const styles = StyleSheet.create({
         padding: 32,
         color: '#777',
         marginTop: 10
-        
+
     },
     textBold: {
         fontWeight: '500',

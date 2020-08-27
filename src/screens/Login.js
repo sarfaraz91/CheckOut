@@ -38,7 +38,6 @@ export default class Login extends Component {
       .then(() => {
 
         this.props.navigation.navigate('MyDrawer')
-
         ViewUtils.showToast('You are logged in Successfully!')
 
       })
@@ -105,6 +104,19 @@ export default class Login extends Component {
       </View>
     );
   }
+
+  componentDidMount() {
+    auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.props.navigation.navigate('MyDrawer')
+      }
+   });
+
+  }
+  
+
+  
+
 }
 
 const Style = StyleSheet.create(

@@ -29,30 +29,6 @@ export default class CreateAccount extends Component {
     }
     this.setState({ isLoading: true })
     auth()
-<<<<<<< HEAD
-    .createUserWithEmailAndPassword(this.state.username, this.state.password)
-    .then(() => {
-
-      this.props.navigation.navigate('Login')
-      ViewUtils.showToast('User account created');
-    })
-    .catch(error => {
-      if (error.code === 'auth/email-already-in-use') {
-        console.log('That email address is already in use!');
-      }
-  
-      if (error.code === 'auth/invalid-email') {
-        console.log('That email address is invalid!');
-      }
-  
-      console.error(error);
-    })
-
-    .finally(() => {
-      this.setState({ isLoading: true });
-  });
-
-=======
       .createUserWithEmailAndPassword(this.state.username, this.state.password)
       .then(() => {
 
@@ -74,7 +50,6 @@ export default class CreateAccount extends Component {
       .finally(() => {
         this.setState({ isLoading: true });
       });
->>>>>>> 612fdd271bb0c49006e1b32733c1d774b95f9cdc
   }
   render() {
     return (

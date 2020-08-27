@@ -16,7 +16,7 @@ class Profile extends React.Component {
 
                     <View style={Style.BgHeader}>
 
-                        <Text style={{ alignSelf: 'center', color: 'white', fontSize: 25, justifyContent: 'center' }}>Jack and Dexter</Text>
+                        <Text style={{ alignSelf: 'center', color: 'white', fontSize: 25, justifyContent: 'center' }}>Christopher</Text>
                     </View>
                     <View style={{ width: 100, height: 100, backgroundColor: '#f2f2f2', borderRadius: 50, alignSelf: 'center', marginTop: -50, alignItems: 'center', justifyContent: 'center', borderColor: '#8BC080', borderWidth: 2 }}>
 
