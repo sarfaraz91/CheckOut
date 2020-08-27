@@ -43,8 +43,8 @@ export default class CreateAccount extends Component {
     .createUserWithEmailAndPassword(this.state.username, this.state.password)
     .then(() => {
 
-      this.props.navigation.navigate('Profile')
-      ViewUtils.showToast('User account created & signed in!!');
+      this.props.navigation.navigate('Login')
+      ViewUtils.showToast('User account created');
     })
     .catch(error => {
       if (error.code === 'auth/email-already-in-use') {
