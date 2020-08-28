@@ -5,22 +5,40 @@ import { View, StyleSheet, StatusBar, SafeAreaView, Text, TouchableOpacity, Link
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import { BackHandler, Alert } from 'react-native';
+import axios from 'axios';
+
 
 class Scanner extends React.Component {
     constructor(props) {
         super(props);
     }
 
+  
     onSuccess = e => {
-        Linking.openURL(e.data).catch(err => {
-            console.error('An error occured', err)
-            console.warn('DATA', e.data)
-            this.props.navigation.navigate('Bill',{data:e.data});
-        });
+        try {
+            if (e.data != undefined) {
+                axios.get(e.data)
+                    .then(res => {
+                        console.warn("response == ",res);
+                        this.props.navigation.navigate('Bill',{res});
+                    })
+                // Linking.openURL(e.data).catch(err => {
+                //     console.error('An error occured', err)
+                //     console.warn('DATA === ', e.data)
+                //     //this.props.navigation.navigate('Bill',{data:e.data});
+                // });
 
-    };
+                console.warn('DATA === ', e.data)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     render() {
+    
+
         return (
             <View style={[CommonStyles.container, { backgroundColor: '#F7FAFE' }]}>
                 <QRCodeScanner

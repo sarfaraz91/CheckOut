@@ -12,15 +12,14 @@ class Bill extends React.Component {
         super(props);
 
         this.state = {
-            //bill: props.route.params.data
-            bill: [],
-            net_amount:0
+            bill: props.route.params.res.data,
+                        net_amount:0
         }
+
+        console.warn("my billll -- ",this.state.bill)
     }
     render() {
-        const bill = [{ "name": "Burger", "quantity": 2, "price": "150", "TOTAL": 300, "totalprice": 430 }, { "name": "Fries", "quantity": 3, "price": "50", "TOTAL": 150, "totalprice": 430 }, { "name": "Pepsi", "quantity": 3, "price": "30", "TOTAL": 90, "totalprice": 430 }, { "name": "sandwitch", "quantity": 1, "price": "200", "TOTAL": 200, "totalprice": 430 }]
-        this.state.bill = bill
-        this.state.net_amount = bill[0].totalprice;
+        this.state.net_amount = this.state.bill[0].totalprice;
         // console.warn("bill --- ",this.state.bill);
         return (
             <View style={Style.container}>
