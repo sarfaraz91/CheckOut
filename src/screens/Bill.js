@@ -82,6 +82,9 @@ class Bill extends React.Component {
                             </View>
                         </View>
                     </View>
+                    <TouchableOpacity
+                    onPress={()=>this.navigation.navigate('Payment')}
+                    >Payment</TouchableOpacity>
                 </KeyboardAwareScrollView>
             </View>
         )

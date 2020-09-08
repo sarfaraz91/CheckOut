@@ -11,6 +11,7 @@ import Login from './screens/Login';
 import Scanner from './screens/Scanner';
 import CreateAccount from './screens/CreateAccount';
 import Bill from './screens/Bill';
+import Payment from './screens/Payment';
 
 
 
@@ -35,7 +36,7 @@ export default class Routes extends React.Component {
       <NavigationContainer>
         <Stack.Navigator>
 
-        <Stack.Screen
+          <Stack.Screen
             name="Login"
             component={Login}
             options={{
@@ -76,7 +77,7 @@ export default class Routes extends React.Component {
               headerStyle: { backgroundColor: '#c0d4e2' },
             }}
           />
-          
+
           <Stack.Screen
             name="Bill"
             component={Bill}
@@ -87,7 +88,16 @@ export default class Routes extends React.Component {
             }}
           />
 
-      
+          <Stack.Screen
+            name="Payment"
+            component={Payment}
+            options={{
+              headerShown: false,
+              headerTitleAlign: 'center',
+              headerStyle: { backgroundColor: '#c0d4e2' },
+            }}
+          />
+
         </Stack.Navigator>
       </NavigationContainer>
     );
