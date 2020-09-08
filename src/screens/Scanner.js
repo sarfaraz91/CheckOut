@@ -17,11 +17,12 @@ class Scanner extends React.Component {
     onSuccess = e => {
         try {
             if (e.data != undefined) {
-                axios.get(e.data)
-                    .then(res => {
-                        console.warn("response == ",res);
-                        this.props.navigation.navigate('Bill',{res});
-                    })
+                // axios.get(e.data)
+                //     .then(res => {
+                //         console.warn("response == ",res);
+                //         this.props.navigation.navigate('Bill',{res});
+                //     })
+                this.props.navigation.navigate('Bill');
                 // Linking.openURL(e.data).catch(err => {
                 //     console.error('An error occured', err)
                 //     console.warn('DATA === ', e.data)
@@ -45,18 +46,16 @@ class Scanner extends React.Component {
                     onRead={this.onSuccess}
                     // flashMode={RNCamera.Constants.FlashMode.torch}
                     topContent={
-                        <Text style={styles.centerText}>
-                            Go to{' '}
-                            <Text style={styles.textBold}>e</Text> on
-            your computer and scan the QR code.
-          </Text>
-                    }
-                    bottomContent={
+  
+                            <Text style={styles.textBold}>Please scan the Barcode for Payment</Text> 
 
-                        <TouchableOpacity style={styles.buttonTouchable}>
-                            <Text style={styles.buttonText}>OK. Got it!</Text>
-                        </TouchableOpacity>
                     }
+                    // bottomContent={
+
+                    //     <TouchableOpacity style={styles.buttonTouchable}>
+                    //         <Text style={styles.buttonText}>OK. Got it!</Text>
+                    //     </TouchableOpacity>
+                    // }
                 />
 
                 <View

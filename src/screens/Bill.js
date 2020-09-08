@@ -12,14 +12,16 @@ class Bill extends React.Component {
         super(props);
 
         this.state = {
-            bill: props.route.params.res.data,
-                        net_amount:0
+            // bill: props.route.params.res.data,
+            //             net_amount:0
+            bill: []
         }
 
-        console.warn("my billll -- ",this.state.bill)
+        // console.warn("my billll -- ",this.state.bill)
+        this.state.bill = ['11', '33', '44', '55']
     }
     render() {
-        this.state.net_amount = this.state.bill[0].totalprice;
+        //this.state.net_amount = this.state.bill[0].totalprice;
         // console.warn("bill --- ",this.state.bill);
         return (
             <View style={Style.container}>
@@ -63,9 +65,12 @@ class Bill extends React.Component {
                                     <View style={{ flexDirection: 'row', }}>
                                         <Text style={{ flex: 1, fontSize: 16 }}>{item.name}</Text>
                                         <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
-                                            <Text style={Style.TextStyle}>{item.quantity}</Text>
+                                            {/* <Text style={Style.TextStyle}>{item.quantity}</Text>
                                             <Text style={Style.TextStyle}>${item.price}</Text>
-                                            <Text style={Style.TextStyle}>${item.TOTAL}</Text>
+                                            <Text style={Style.TextStyle}>${item.TOTAL}</Text> */}
+                                            <Text style={Style.TextStyle}>2</Text>
+                                            <Text style={Style.TextStyle}>100</Text>
+                                            <Text style={Style.TextStyle}>200</Text>
                                         </View>
 
                                     </View>
@@ -75,16 +80,21 @@ class Bill extends React.Component {
                     </View>
                     <View style={{ margin: 40 }}>
                         <View>
-                            <View style={{ flexDirection: 'row',alignItems:'flex-end',justifyContent:'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
                                 <Text style={{ fontSize: 24 }}>Net Amount = </Text>
-                                <Text style={{ fontSize: 24 }}>${this.state.net_amount}</Text>
+                                {/* <Text style={{ fontSize: 24 }}>${this.state.net_amount}</Text> */}
+                                <Text style={{ fontSize: 24 }}>800</Text>
 
                             </View>
                         </View>
                     </View>
-                    <TouchableOpacity
-                    onPress={()=>this.navigation.navigate('Payment')}
-                    >Payment</TouchableOpacity>
+                    <View style={Style.btnContainer}>
+                        <TouchableOpacity style={Style.btnStyle}
+                            onPress={()=>this.props.navigation.navigate('Payment')}
+                        >
+                            <Text style={Style.btnText}>Payment</Text>
+                        </TouchableOpacity>
+                    </View>
                 </KeyboardAwareScrollView>
             </View>
         )
@@ -133,6 +143,22 @@ const Style = StyleSheet.create({
         fontSize: 18,
         color: '#8BC080',
         marginLeft: 10
+    }, btnContainer: {
+        width: '70%',
+        marginTop: 70,
+        alignSelf: 'center',
+    },
+    btnStyle: {
+        marginVertical: 10,
+        backgroundColor: '#F5F5F5',
+        borderRadius: 5
+    },
+    btnText: {
+        textAlign: 'center',
+        color: '#8BC080',
+        fontSize: 20,
+        padding: 10,
+        fontWeight: 'bold'
     }
 }
 )

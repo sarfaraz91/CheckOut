@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
-import { View, Text, StyleSheet, Dimensions, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TextInput,TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Icon } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
+import { Icon, Input } from 'native-base';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -62,6 +62,21 @@ class Settings extends React.Component {
                         </View>
                     </View>
                 </KeyboardAwareScrollView>
+                {/* <View
+                    style={[
+                        CommonStyles.backButtonStyle
+                    ]}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.navigation.goBack();
+                        }}>
+                        <Icon
+                            name="arrow-back"
+                            type="MaterialIcons"
+                            style={{ color: '#FFF' }}
+                        />
+                    </TouchableOpacity>
+                </View> */}
             </View>
 
         )
