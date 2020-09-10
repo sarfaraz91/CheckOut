@@ -8,6 +8,8 @@ target 'CheckOut' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+
+
   target 'CheckOutTests' do
     inherit! :complete
     # Pods for testing
