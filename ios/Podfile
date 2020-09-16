@@ -10,6 +10,8 @@ target 'CheckOut' do
 
 
 
+  pod 'RNFBDatabase', :path => '../node_modules/@react-native-firebase/database'
+
   target 'CheckOutTests' do
     inherit! :complete
     # Pods for testing

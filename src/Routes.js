@@ -12,6 +12,7 @@ import Scanner from './screens/Scanner';
 import CreateAccount from './screens/CreateAccount';
 import Bill from './screens/Bill';
 import Payment from './screens/Payment';
+import AddFriends from './screens/AddFriends';
 
 
 
@@ -97,6 +98,18 @@ export default class Routes extends React.Component {
               headerStyle: { backgroundColor: '#c0d4e2' },
             }}
           />
+
+          <Stack.Screen
+            name="AddFriends"
+            component={AddFriends}
+            options={{
+              headerShown: false,
+              headerTitleAlign: 'center',
+              headerStyle: { backgroundColor: '#c0d4e2' },
+            }}
+          />
+
+
 
         </Stack.Navigator>
       </NavigationContainer>
