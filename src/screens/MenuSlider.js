@@ -31,14 +31,15 @@ class MenuSlider extends React.Component {
 
         const menuComponents = [
             { name: 'Home', iconName: 'home', iconFamily: 'Feather', iconSize: '18', route: 'Home' },
-            { name: 'Profile', iconName: 'profile', iconFamily: 'AntDesign', iconSize: '18', route: 'Profile' },
+            { name: 'Add Friends', iconName: 'addusergroup', iconFamily: 'AntDesign', iconSize: '18', route: 'AddFriends' },
+            { name: 'Edit Profile', iconName: 'profile', iconFamily: 'AntDesign', iconSize: '18', route: 'Profile' },
             { name: 'Settings', iconName: 'setting', iconFamily: 'AntDesign', iconSize: '18', route: 'Settings' },
             { name: 'Log out', iconName: 'logout', iconFamily: 'AntDesign', iconSize: '18', route: 'Settings' },
         ];
 
         return (
             <View style={[CommonStyles.container, CommonStyles.padding, { backgroundColor: '#F7FAFE' }]}>
-
+                
                 <View
                     style={[CommonStyles.padding, CommonStyles.mtt10]} >
                     <Label style={[CommonStyles.fontBold, CommonStyles.textSizeLarge]}>Check Out</Label>

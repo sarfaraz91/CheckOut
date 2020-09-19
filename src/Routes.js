@@ -25,6 +25,7 @@ export default class Routes extends React.Component {
     return (
       <Drawer.Navigator drawerContent={props => <MenuSlider {...props} />}>
         <Drawer.Screen name="Home" component={Scanner} />
+        <Drawer.Screen name="AddFriends" component={AddFriends} />
         <Drawer.Screen name="Profile" component={Profile} />
         <Drawer.Screen name="Settings" component={Settings} />
 
@@ -99,7 +100,7 @@ export default class Routes extends React.Component {
             }}
           />
 
-          <Stack.Screen
+          {/* <Stack.Screen
             name="AddFriends"
             component={AddFriends}
             options={{
@@ -107,7 +108,7 @@ export default class Routes extends React.Component {
               headerTitleAlign: 'center',
               headerStyle: { backgroundColor: '#c0d4e2' },
             }}
-          />
+          /> */}
 
 
 

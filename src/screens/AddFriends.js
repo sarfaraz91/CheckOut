@@ -4,24 +4,53 @@ import CommonStyles from '../CommonStyles';
 import { Icon, Item, Picker } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ViewUtils } from '../Utils';
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
 
 export default class AddFriends extends Component {
 
-    state = {
-        appointments: [],
-        isLoading: true,
-        selected: "key2"
 
-    };
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            emails: [],
+            isLoading: true,
+            selected: "",
+            userId: '',
+            emailExist: false
+        };
+
+
     }
 
-    onValueChange(value) {
-        this.setState({
-            selected: value
+    componentDidMount() {
+
+        auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({ userId: user.uid })
+            }
         });
+
+
+        database()
+            .ref('/Users/')
+            .once("value")
+            .then(async snapshot => {
+                let emails = [];
+                snapshot.forEach(item => {
+
+                    const temp = item.val();
+                    emails.push(temp);
+                });
+                this.setState({ emails: emails })
+            });
+
+    }
+
+    onValueChange = (value) => {
+        this.setState({ selected: value })
     }
 
     render() {
@@ -54,28 +83,32 @@ export default class AddFriends extends Component {
                             placeholderIconColor="#007aff"
                             selectedValue={this.state.selected}
                             onValueChange={this.onValueChange.bind(this)}>
-                            {/* <Picker.Item
-                                                    color="gray"
-                                                    selected={false}
-                                                    label="Select Vital Type"
-                                                    value=""
-                                                /> */}
-                            <Picker.Item label="Coming 7 days" value="key0" />
-                            <Picker.Item label="Coming 15 days" value="key1" />
-                            <Picker.Item label="Upcoming Appointments" value="key2" />
+                            <Picker.Item
+                                color="gray"
+                                selected={false}
+                                label="Please select a Friend"
+                                value=""
+                            />
+                            {this.renderPicker()}
                         </Picker>
                     </Item>
-
-
+                    <View style={Style.btnContainer}>
+                        <TouchableOpacity style={Style.btnStyle}
+                            onPress={() => this.addFriend()}
+                        >
+                            <Text style={Style.btnText}>Add</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
+
                 <View
                     style={[
                         CommonStyles.backButtonStyle
                     ]}>
                     <TouchableOpacity
-                    // onPress={() => {
-                    //     //this.props.navigation.goBack();
-                    // }}
+                    onPress={() => {
+                        this.props.navigation.goBack();
+                    }}
                     >
                         <Icon
                             name="arrow-back"
@@ -89,12 +122,80 @@ export default class AddFriends extends Component {
         );
     }
 
+    addFriend() {
+        if (this.state.selected == '') {
+            ViewUtils.showAlert('Please select a Friend to add.')
+            return;
+        }
+
+        database()
+            .ref(`/Groups/${this.state.userId}/Friends/`)
+            .once("value")
+            .then(async snapshot => {
+                if(snapshot != null){
+                    snapshot.forEach(item => {
+                        const temp = item.val();
+                        if (temp.email == this.state.selected) {
+                            this.state.emailExist = true;
+                        }
+                    });
+                }
+                
+                if (this.state.emailExist == false) {
+                    let group = database()
+                        .ref(`/Groups/${this.state.userId}/Friends/`).push();
+                    group.set({
+                        email: this.state.selected,
+                    })
+                        .then(() => ViewUtils.showAlert('Successfully Added.'));
+                        this.state.emailExist = false;
+                }else{
+                    ViewUtils.showAlert('This Friend is already in your Group.')
+                    this.state.emailExist = false
+                }
+
+            });
+
+
+
+    }
+
+    renderPicker() {
+        return (
+            this.state.emails.map((myValue, myIndex) => {
+                return (
+                    <Picker.Item label={myValue.email} value={myValue.email} key={myIndex} />
+                );
+            }
+            )
+        )
+    }
+
 }
+
+
 
 const Style = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#f2f2f2'
+    },
+    btnContainer: {
+        width: '90%',
+        marginTop: 30,
+        alignSelf: 'center',
+    },
+    btnStyle: {
+        marginVertical: 10,
+        backgroundColor: '#8BC080',
+        borderRadius: 5
+    },
+    btnText: {
+        textAlign: 'center',
+        color: '#FFF',
+        fontSize: 20,
+        padding: 10,
+        fontWeight: 'bold'
     }
 }
 )

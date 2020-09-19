@@ -6,6 +6,7 @@ import auth from '@react-native-firebase/auth';
 import Loader from '.././assets/components/Loader';
 import { ViewUtils } from '../Utils'
 import { Text } from 'react-native';
+import database from '@react-native-firebase/database';
 
 export default class CreateAccount extends Component {
 
@@ -30,10 +31,18 @@ export default class CreateAccount extends Component {
     this.setState({ isLoading: true })
     auth()
       .createUserWithEmailAndPassword(this.state.username, this.state.password)
-      .then(() => {
+      .then((res) => {
 
         this.props.navigation.navigate('Profile')
         ViewUtils.showToast('User account created & signed in!!');
+        database()
+          .ref(`/Users/${res.user.uid}/`)
+          .set({
+            email: this.state.username,
+            password: this.state.password,
+          })
+          .then(() => console.warn('Data set.'));
+          
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
