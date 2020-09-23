@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
-import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Dimensions, AsyncStorage } from 'react-native';
 import { Icon, Input, Item, DatePicker } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import database from '@react-native-firebase/database';
@@ -25,7 +25,8 @@ class Profile extends React.Component {
             phone: '',
             social: '',
             email: '',
-            image: ''
+            image: '',
+            isFb: false
         };
 
 
@@ -48,26 +49,30 @@ class Profile extends React.Component {
                         this.setState({ social: snapshot.val().social })
                         this.setState({ birthday: snapshot.val().birthday })
 
-                    }); 
+                    });
 
-                    this.getImage()
+                this.getImage()
             }
 
         });
 
     }
 
-    async getImage(){
+    async getImage() {
         const url = await storage()
-        .ref('gs://comcheckout.appspot.com')
-        .getDownloadURL();
+            .ref('gs://comcheckout.appspot.com')
+            .getDownloadURL();
 
-        this.setState({image:url})
- 
+        this.setState({ image: url })
+
     }
 
     componentDidMount() {
-        this.getUser()
+        const data = this._retrieveData()
+        if (data == null) {
+            this.getUser()
+        }
+
     }
 
 
@@ -116,6 +121,7 @@ class Profile extends React.Component {
                                 placeholder="Username"
                                 enablesReturnKeyAutomatically
                                 autoCapitalize='none'
+                                editable={this.state.isFb == false ? true : false}
                                 style={Style.TextStyle}>
                             </TextInput>
                         </View>
@@ -138,7 +144,7 @@ class Profile extends React.Component {
                                     placeHolderTextStyle={Style.TextStyle}
                                     value={this.state.birthday}
                                     onDateChange={val => this.setState({ birthday: val.getDate() + "-" + (val.getMonth() + 1) + "-" + val.getFullYear() })}
-                                    disabled={false}
+                                    disabled={this.state.isFb == false ? false : true}
 
                                 />
                             </Item>
@@ -155,6 +161,7 @@ class Profile extends React.Component {
                                 enablesReturnKeyAutomatically
                                 autoCapitalize='none'
                                 keyboardType='numeric'
+                                editable={this.state.isFb == false ? true : false}
                                 style={Style.TextStyle}>
                             </TextInput>
                         </View>
@@ -184,6 +191,7 @@ class Profile extends React.Component {
                                 placeholder="Email"
                                 enablesReturnKeyAutomatically
                                 autoCapitalize='none'
+                                editable={this.state.isFb == false ? true : false}
                                 style={Style.TextStyle}>
                             </TextInput>
 
@@ -204,13 +212,15 @@ class Profile extends React.Component {
                             <TextInput placeholderTextColor="#8BC080" placeholder="Password" style={Style.TextStyle}></TextInput>
                         </View> */}
                     </View>
-                    <View style={Style.btnContainer}>
-                        <TouchableOpacity style={Style.btnStyle}
-                            onPress={() => this.updateProfile()}
-                        >
-                            <Text style={Style.btnText}>Update</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {this.state.isFb == false && 
+                     <View style={Style.btnContainer}>
+                     <TouchableOpacity style={Style.btnStyle}
+                         onPress={() => this.updateProfile()}
+                     >
+                         <Text style={Style.btnText}>Update</Text>
+                     </TouchableOpacity>
+                 </View>}
+                   
                 </KeyboardAwareScrollView>
                 <View
                     style={[
@@ -261,11 +271,26 @@ class Profile extends React.Component {
 
     }
 
-   
+    _retrieveData = async () => {
+        try {
+            const value = await AsyncStorage.getItem('user');
+            if (value !== null) {
+                this.setState({isFb : true})
+                let parsed = JSON.parse(value);  
+                this.setState({username : parsed.name})
+                this.setState({image : parsed.image})
+                return value;
+            }
+        } catch (error) {
+            return null;
+            // Error retrieving data
+        }
+    };
+
 
 
     updateProfile() {
-        
+
         if (this.state.image != '') {
             var reference = storage().ref('gs://comcheckout.appspot.com');
             const task = reference.putFile(this.state.image)

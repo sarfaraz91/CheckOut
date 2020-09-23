@@ -142,15 +142,20 @@ _responseInfoCallback = (error, result) => {
   if (error) {
     alert('Error fetching data: ' + error.toString());
   } else {
-    _storeData(result)
-    console.warn("result :: ",result)
+    this._storeData(result)
+    this.props.navigation.navigate('MyDrawer')
+    console.warn("result :: ",result.picture.data.url)
   }
 }
 
 _storeData = async (result) => {
+  let obj = {  
+    name: result.name,  
+    image: result.picture.data.url,  
+  }
   try {
     await AsyncStorage.setItem(
-      'result',result
+      'user',JSON.stringify(obj)
     );
   } catch (error) {
     // Error saving data
