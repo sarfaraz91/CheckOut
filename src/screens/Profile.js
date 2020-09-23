@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
-import { View, Text, StyleSheet, Image, ImageBackground, TextInput, TouchableOpacity, Dimensions } from 'react-native';
-import { Icon, Input } from 'native-base';
+import { View, Text, StyleSheet, Image, TextInput, TouchableOpacity, Dimensions } from 'react-native';
+import { Icon, Input, Item, DatePicker } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import ImagePicker from 'react-native-image-picker'
 import { ViewUtils } from '../Utils';
+import storage from '@react-native-firebase/storage';
+
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -17,12 +20,12 @@ class Profile extends React.Component {
         this.state = {
             userId: '',
             user: {},
-            username:'',
-            birthday:'',
-            phone:'',
-            social:'',
-            email:'',
-
+            username: '',
+            birthday: '',
+            phone: '',
+            social: '',
+            email: '',
+            image: ''
         };
 
 
@@ -34,32 +37,37 @@ class Profile extends React.Component {
             this.setState({ user: user })
             if (user) {
                 this.setState({ user: user })
-                this.setState({email:user.email})
+                this.setState({ email: user.email })
+
+                database()
+                    .ref(`/Users/${this.state.user.uid}/`)
+                    .once("value")
+                    .then(async snapshot => {
+                        this.setState({ username: snapshot.val().username })
+                        this.setState({ phone: snapshot.val().phone })
+                        this.setState({ social: snapshot.val().social })
+                        this.setState({ birthday: snapshot.val().birthday })
+
+                    }); 
+
+                    this.getImage()
             }
 
         });
 
     }
 
+    async getImage(){
+        const url = await storage()
+        .ref('gs://comcheckout.appspot.com')
+        .getDownloadURL();
+
+        this.setState({image:url})
+ 
+    }
+
     componentDidMount() {
         this.getUser()
-        console.warn("this.state.user.uid :: ",this.state.user.uid)
-
-        database()
-        .ref(`/Users/${this.state.user.uid}/`)
-        .once("value")
-        .then(async snapshot => {
-            console.warn("snapshot :: ",snapshot)
-            snapshot.forEach(item => {
-                console.warn("item :: ",item)
-                this.setState({ username: item.username })
-                this.setState({ phone: item.phone })
-                this.setState({ social: item.social })
-                this.setState({ birthday: item.birthday })
-            });
-            
-        });
-
     }
 
 
@@ -70,15 +78,32 @@ class Profile extends React.Component {
                     <View style={{ backgroundColor: '#8BC080', height: 60 }}></View>
 
                     <View style={Style.BgHeader}>
+                        {this.state.username != '' ? (
+                            <Text style={{ alignSelf: 'center', color: 'white', fontSize: 25, justifyContent: 'center' }}>{this.state.username}</Text>
 
-                        <Text style={{ alignSelf: 'center', color: 'white', fontSize: 25, justifyContent: 'center' }}>Christopher</Text>
+                        ) : (
+                                <Text style={{ alignSelf: 'center', color: 'white', fontSize: 25, justifyContent: 'center' }}>{this.state.email}</Text>
+
+                            )}
                     </View>
-                    <View style={{ width: 100, height: 100, backgroundColor: '#f2f2f2', borderRadius: 50, alignSelf: 'center', marginTop: -50, alignItems: 'center', justifyContent: 'center', borderColor: '#8BC080', borderWidth: 2 }}>
+                    <TouchableOpacity
+                        style={{ width: 100, height: 100, backgroundColor: '#f2f2f2', borderRadius: 50, alignSelf: 'center', marginTop: -50, alignItems: 'center', justifyContent: 'center', borderColor: '#8BC080', borderWidth: 2 }}
+
+                        onPress={() => this.handleChoosePhoto()}
+                    >
+                        {this.state.image != '' ? (
+                            <Image
+                                source={{ uri: this.state.image }}
+                                style={Style.profileImg}
+                            />
+                        ) : (
+                                <Icon name="user" type='FontAwesome' style={{ fontSize: 80, color: '#8BC080' }} />
+
+                            )
+                        }
 
 
-                        <Icon name="user" type='FontAwesome' style={{ fontSize: 80, color: '#8BC080' }} />
-
-                    </View>
+                    </TouchableOpacity>
 
                     <View style={Style.parentContainer}>
                         <View style={Style.childContainer}>
@@ -97,16 +122,26 @@ class Profile extends React.Component {
 
                         <View style={Style.childContainer}>
                             <Icon name="birthday-cake" type='FontAwesome5' style={Style.IconStyle} />
-                            <TextInput
-                                value={this.state.birthday}
-                                onChangeText={val => this.setState({ birthday: val })}
-                                underlineColorAndroid='transparent'
-                                placeholderTextColor='#8BC080'
-                                placeholder="Birthday"
-                                enablesReturnKeyAutomatically
-                                autoCapitalize='none'
-                                style={Style.TextStyle}>
-                            </TextInput>
+                            <Item
+                            >
+                                <DatePicker
+                                    // defaultDate={new Date()}
+                                    // minimumDate={new Date()}
+                                    locale={'en'}
+                                    timeZoneOffsetInMinutes={undefined}
+                                    modalTransparent={false}
+                                    animationType={'fade'}
+                                    androidMode={'default'}
+                                    underlineColorAndroid={'transparent'}
+                                    placeHolderText="mm/dd/yyyy"
+                                    textStyle={Style.TextStyle}
+                                    placeHolderTextStyle={Style.TextStyle}
+                                    value={this.state.birthday}
+                                    onDateChange={val => this.setState({ birthday: val.getDate() + "-" + (val.getMonth() + 1) + "-" + val.getFullYear() })}
+                                    disabled={false}
+
+                                />
+                            </Item>
                         </View>
 
                         <View style={Style.childContainer}>
@@ -119,11 +154,12 @@ class Profile extends React.Component {
                                 placeholder="Phone Number"
                                 enablesReturnKeyAutomatically
                                 autoCapitalize='none'
+                                keyboardType='numeric'
                                 style={Style.TextStyle}>
                             </TextInput>
                         </View>
 
-                        <View style={Style.childContainer}>
+                        {/* <View style={Style.childContainer}>
                             <Icon name="instagram" type='AntDesign' style={Style.IconStyle} />
                             <TextInput
                                 value={this.state.social}
@@ -136,7 +172,7 @@ class Profile extends React.Component {
                                 style={Style.TextStyle}>
                             </TextInput>
 
-                        </View>
+                        </View> */}
 
                         <View style={Style.childContainer}>
                             <Icon name="email" type='Fontisto' style={Style.IconStyle} />
@@ -170,7 +206,7 @@ class Profile extends React.Component {
                     </View>
                     <View style={Style.btnContainer}>
                         <TouchableOpacity style={Style.btnStyle}
-                            onPress={()=>this.updateProfile() }
+                            onPress={() => this.updateProfile()}
                         >
                             <Text style={Style.btnText}>Update</Text>
                         </TouchableOpacity>
@@ -195,17 +231,59 @@ class Profile extends React.Component {
         )
     }
 
-    updateProfile(){
+    handleChoosePhoto = () => {
+
+        const options = {
+            title: '',
+            noData: true,
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+
+
+        ImagePicker.showImagePicker(options, (response) => {
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else {
+                // show loader
+                const fileData = new FormData();
+                const source = { uri: response.uri };
+                this.setState({
+                    image: source.uri,
+                });
+            }
+        });
+
+    }
+
+   
+
+
+    updateProfile() {
+        
+        if (this.state.image != '') {
+            var reference = storage().ref('gs://comcheckout.appspot.com');
+            const task = reference.putFile(this.state.image)
+            task.then(() => {
+                console.log('Image uploaded to the bucket!');
+            });
+        }
+
         database()
-        .ref(`/Users/${this.state.user.uid}/`)
-        .set({
-          email: this.state.email,
-          birthday: this.state.birthday,
-          phone: this.state.phone,
-          social: this.state.social,
-          username: this.state.username,
-        })
-        .then(() => ViewUtils.showAlert("Update Successfully."));
+            .ref(`/Users/${this.state.user.uid}/`)
+            .set({
+                email: this.state.email,
+                birthday: this.state.birthday,
+                phone: this.state.phone,
+                //social: this.state.social,
+                username: this.state.username,
+            })
+            .then(() => ViewUtils.showAlert("Update Successfully."));
     }
 }
 
@@ -244,7 +322,6 @@ const Style = StyleSheet.create({
     TextStyle: {
         color: '#8BC080',
         fontSize: 16,
-        textAlign: 'center',
         paddingLeft: 30
 
     },
@@ -269,6 +346,17 @@ const Style = StyleSheet.create({
         fontSize: 20,
         padding: 10,
         fontWeight: 'bold'
-    }
+    },
+    profileImgContainer: {
+        marginLeft: 8,
+        height: 80,
+        width: 80,
+        borderRadius: 40,
+    },
+    profileImg: {
+        height: 95,
+        width: 95,
+        borderRadius: 55,
+    },
 }
 )

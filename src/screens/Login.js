@@ -5,7 +5,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 import auth from '@react-native-firebase/auth';
 import Loader from '.././assets/components/Loader';
 import { ViewUtils } from '../Utils'
-import { Text } from 'react-native';
+import { Text,AsyncStorage } from 'react-native';
+import { LoginButton, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 
 export default class Login extends Component {
 
@@ -44,12 +45,12 @@ export default class Login extends Component {
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
           ViewUtils.showToast('That email address is already in use!')
-        
+
         }
 
         if (error.code === 'auth/invalid-email') {
           ViewUtils.showToast('That email address is invalid!')
-      
+
         }
 
         console.error(error);
@@ -61,10 +62,10 @@ export default class Login extends Component {
 
   render() {
     return (
-      <View style={[CommonStyles.container, CommonStyles.bgColor ]}>
+      <View style={[CommonStyles.container, CommonStyles.bgColor]}>
         <KeyboardAwareScrollView style={[CommonStyles.container]}>
 
-          <Image style={[CommonStyles.container, Style.logo, {marginVertical: 50}]} source={require('../assets/img/checkout_logo.png')}></Image>
+          <Image style={[CommonStyles.container, Style.logo, { marginVertical: 50 }]} source={require('../assets/img/checkout_logo.png')}></Image>
           <TextInput
             value={this.state.username}
             onChangeText={val => this.setState({ username: val })}
@@ -74,7 +75,7 @@ export default class Login extends Component {
             enablesReturnKeyAutomatically
             autoCapitalize='none'
             style={Style.input}>
-            </TextInput>
+          </TextInput>
           <TextInput
             value={this.state.password}
             onChangeText={val => this.setState({ password: val })}
@@ -97,6 +98,28 @@ export default class Login extends Component {
               <Text style={Style.btnText}>Create Account</Text>
             </TouchableOpacity>
           </View>
+
+          <View style={{ alignItems: 'center' }}>
+            <LoginButton
+              onLoginFinished={
+                (error, result) => {
+                  if (error) {
+                    console.log("login has error: " + result.error);
+                  } else if (result.isCancelled) {
+                    console.log("login is cancelled.");
+                  } else {
+                    AccessToken.getCurrentAccessToken().then(
+                      (data) => {
+                        //this.props.navigation.navigate('MyDrawer')
+                        //console.warn("accessToken : ",data.accessToken.toString())
+                        this.initUser()
+                      }
+                    )
+                  }
+                }
+              }
+              onLogoutFinished={() => console.log("logout.")} />
+          </View>
           <Loader loading={this.state.isLoading} />
 
         </KeyboardAwareScrollView>
@@ -105,14 +128,44 @@ export default class Login extends Component {
     );
   }
 
-  componentDidMount() {
-    auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.props.navigation.navigate('MyDrawer')
-      }
-   });
-
+  initUser() {
+    const infoRequest = new GraphRequest(
+      '/me?fields=name,email,picture.type(large)',
+      null,
+      this._responseInfoCallback
+    );
+    new GraphRequestManager().addRequest(infoRequest).start();
   }
+
+ 
+_responseInfoCallback = (error, result) => {
+  if (error) {
+    alert('Error fetching data: ' + error.toString());
+  } else {
+    _storeData(result)
+    console.warn("result :: ",result)
+  }
+}
+
+_storeData = async (result) => {
+  try {
+    await AsyncStorage.setItem(
+      'result',result
+    );
+  } catch (error) {
+    // Error saving data
+  }
+};
+
+
+componentDidMount() {
+  auth().onAuthStateChanged((user) => {
+    if (user) {
+      this.props.navigation.navigate('MyDrawer')
+    }
+  });
+
+}
   
 
   
@@ -136,7 +189,7 @@ const Style = StyleSheet.create(
       padding: 15,
       borderBottomColor: '#F5F5F5',
       borderBottomWidth: 2,
-      fontSize: 15, 
+      fontSize: 15,
       alignSelf: 'center'
     },
     btnContainer: {
