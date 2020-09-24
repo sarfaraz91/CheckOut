@@ -1,0 +1,21 @@
+[debug] [2020-09-23T22:57:00.618Z] ----------------------------------------------------------------------
+[debug] [2020-09-23T22:57:00.626Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Sarfaraz Malik\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2020-09-23T22:57:00.627Z] CLI Version:   8.10.0
+[debug] [2020-09-23T22:57:00.627Z] Platform:      win32
+[debug] [2020-09-23T22:57:00.627Z] Node Version:  v12.18.2
+[debug] [2020-09-23T22:57:00.631Z] Time:          Thu Sep 24 2020 03:57:00 GMT+0500 (Pakistan Standard Time)
+[debug] [2020-09-23T22:57:00.631Z] ----------------------------------------------------------------------
+[debug] [2020-09-23T22:57:00.632Z] 
+[debug] [2020-09-23T22:57:00.648Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-09-23T22:57:00.650Z] > authorizing via signed-in user
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  F:\ReactNative_Projects\CheckOut
+

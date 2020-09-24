@@ -7,6 +7,7 @@ import Loader from '.././assets/components/Loader';
 import { ViewUtils } from '../Utils'
 import { Text,AsyncStorage } from 'react-native';
 import { LoginButton, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import axios from 'axios';
 
 export default class Login extends Component {
 
@@ -98,8 +99,9 @@ export default class Login extends Component {
               <Text style={Style.btnText}>Create Account</Text>
             </TouchableOpacity>
           </View>
-
-          <View style={{ alignItems: 'center' }}>
+          <Text style={{alignSelf:'center'}}>Or Login With</Text>
+          <View style={{ alignItems: 'center',marginTop:10}}>
+            
             <LoginButton
               onLoginFinished={
                 (error, result) => {
@@ -163,15 +165,30 @@ _storeData = async (result) => {
 };
 
 
-componentDidMount() {
+componentDidMount() {  
   auth().onAuthStateChanged((user) => {
     if (user) {
       this.props.navigation.navigate('MyDrawer')
     }
   });
-
 }
   
+// setUser(){
+ 
+//     axios.post('https://checkoutapp1.herokuapp.com/api/stripe', {
+//       token: this.state.tokenId,
+//       amount: this.state.amount
+//     })
+//       .then(function (response) {
+//         // this.setState({ loading: false })      
+//         console.log(response);
+//       })
+//       .catch(function (error) {
+//         // this.setState({ loading: false })
+//         console.warn(error);
+//       });
+
+// }
 
   
 
@@ -199,20 +216,20 @@ const Style = StyleSheet.create(
     },
     btnContainer: {
       width: '90%',
-      marginTop: 70,
+      marginTop: 30,
       alignSelf: 'center',
-    },
-    btnStyle: {
+  },
+  btnStyle: {
       marginVertical: 10,
-      backgroundColor: '#F5F5F5',
+      backgroundColor: '#8BC080',
       borderRadius: 5
-    },
-    btnText: {
+  },
+  btnText: {
       textAlign: 'center',
-      color: '#8BC080',
+      color: '#FFF',
       fontSize: 20,
       padding: 10,
       fontWeight: 'bold'
-    }
+  }
   }
 )

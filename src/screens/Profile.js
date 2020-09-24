@@ -53,7 +53,6 @@ class Profile extends React.Component {
 
                 this.getImage()
             }
-
         });
 
     }

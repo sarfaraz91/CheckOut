@@ -88,11 +88,12 @@ class Bill extends React.Component {
                             </View>
                         </View>
                     </View>
+    
                     <View style={Style.btnContainer}>
                         <TouchableOpacity style={Style.btnStyle}
-                            onPress={()=>this.props.navigation.navigate('Payment')}
+                            onPress={() => this.props.navigation.navigate('Payment')}
                         >
-                            <Text style={Style.btnText}>Payment</Text>
+                            <Text style={Style.btnText}>Share</Text>
                         </TouchableOpacity>
                     </View>
                 </KeyboardAwareScrollView>
@@ -144,18 +145,18 @@ const Style = StyleSheet.create({
         color: '#8BC080',
         marginLeft: 10
     }, btnContainer: {
-        width: '70%',
-        marginTop: 70,
+        width: '90%',
+        marginTop: 30,
         alignSelf: 'center',
     },
     btnStyle: {
         marginVertical: 10,
-        backgroundColor: '#F5F5F5',
+        backgroundColor: '#8BC080',
         borderRadius: 5
     },
     btnText: {
         textAlign: 'center',
-        color: '#8BC080',
+        color: '#FFF',
         fontSize: 20,
         padding: 10,
         fontWeight: 'bold'

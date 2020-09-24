@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
-import { View, StyleSheet, StatusBar, SafeAreaView, Image, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, StatusBar, SafeAreaView, Image, TextInput, TouchableOpacity,AsyncStorage } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import auth from '@react-native-firebase/auth';
 import Loader from '.././assets/components/Loader';
 import { ViewUtils } from '../Utils'
 import { Text } from 'react-native';
 import database from '@react-native-firebase/database';
+import axios from 'axios';
+
 
 export default class CreateAccount extends Component {
 
@@ -33,7 +35,7 @@ export default class CreateAccount extends Component {
       .createUserWithEmailAndPassword(this.state.username, this.state.password)
       .then((res) => {
 
-        this.props.navigation.navigate('Profile')
+        this.props.navigation.navigate('MyDrawer')
         ViewUtils.showToast('User account created & signed in!!');
         database()
           .ref(`/Users/${res.user.uid}/`)
@@ -42,7 +44,8 @@ export default class CreateAccount extends Component {
             password: this.state.password,
           })
           .then(() => console.warn('Data set.'));
-          
+          this.setUser();
+
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -60,6 +63,27 @@ export default class CreateAccount extends Component {
         this.setState({ isLoading: true });
       });
   }
+
+  async setUser() {
+    const fcmToken = await AsyncStorage.getItem('fcmToken');
+    console.warn("token at create :: ",fcmToken)
+    // axios.post('https://checkoutapp1.herokuapp.com/api/stripe', {
+    //   registryToken: fcmToken,
+    //   username: this.state.username,
+    //   email:this.state.username
+    // })
+    //   .then(function (response) {
+    //     // this.setState({ loading: false })      
+    //     console.log(response);
+    //   })
+    //   .catch(function (error) {
+    //     // this.setState({ loading: false })
+    //     console.warn(error);
+    //   });
+
+  }
+
+
   render() {
     return (
       <View style={[CommonStyles.container, CommonStyles.bgColor]}>
@@ -123,20 +147,20 @@ const Style = StyleSheet.create(
     },
     btnContainer: {
       width: '90%',
-      marginTop: 80,
+      marginTop: 30,
       alignSelf: 'center',
-    },
-    btnStyle: {
-      marginVertical: 15,
-      backgroundColor: '#F5F5F5',
+  },
+  btnStyle: {
+      marginVertical: 10,
+      backgroundColor: '#8BC080',
       borderRadius: 5
-    },
-    btnText: {
+  },
+  btnText: {
       textAlign: 'center',
-      color: '#8BC080',
+      color: '#FFF',
       fontSize: 20,
       padding: 10,
       fontWeight: 'bold'
-    }
+  }
   }
 )

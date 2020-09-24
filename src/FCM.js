@@ -1,4 +1,5 @@
 import messaging from '@react-native-firebase/messaging';
+import { AsyncStorage } from 'react-native';
 // import Api from './Api';
 
 export default class FCM {
@@ -16,13 +17,11 @@ export default class FCM {
   }
 
   appInit() {
-    console.warn("FCM")
 
     this.checkPermission();
   }
 
   async checkPermission() {
-    console.warn("FCM")
 
     const authStatus = await messaging().requestPermission();
 
@@ -39,16 +38,19 @@ export default class FCM {
   }
 
   async getToken() {
-    console.warn("FCM")
+    console.log("FCM")
     let fcmToken = '';
     try {
       fcmToken = await messaging().getToken();
     } catch (error) {
       console.error(error);
     }
-    // if (fcmToken) {
-    //   await Api.instance().updateFcmToken(fcmToken);
-    // }
+    console.warn("token :: ",fcmToken)
+    if (fcmToken) {
+      await AsyncStorage.setItem('fcmToken', fcmToken);
+      console.log("TOKEN IS SET")
+     // await Api.instance().updateFcmToken(fcmToken);
+    }
   }
 
   async requestPermission() {
@@ -85,7 +87,6 @@ export default class FCM {
      * */
     this.notificationOpenedListener = messaging().onNotificationOpenedApp(
       notificationOpen => {
-        console.warn("FCM")
 
         this.onMessage(null, notificationOpen.notification._data);
       },
@@ -96,14 +97,12 @@ export default class FCM {
      * */
     const notificationOpen = await messaging()
       .getInitialNotification();
-      console.warn("FCM")
 
     if (notificationOpen) {
       this.onMessage(null, notificationOpen.notification._data);
     }
 
     messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.warn("FCM")
 
       this.onMessage(null, remoteMessage.notification._data);
     });
@@ -112,7 +111,6 @@ export default class FCM {
      * Triggered for data only payload in foreground
      * */
     this.messageListener = messaging().onMessage(async message => {
-      console.warn("FCM")
 
       //process data message
       this.onMessage(null, message);
@@ -120,7 +118,6 @@ export default class FCM {
   }
 
   onMessage(title, body) {
-    console.warn("FCM")
 
     if (this.notifyUser) {
       this.notifyUser(title, body);
