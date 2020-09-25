@@ -17,12 +17,12 @@ class Scanner extends React.Component {
     onSuccess = e => {
         try {
             if (e.data != undefined) {
-                // axios.get(e.data)
-                //     .then(res => {
-                //         console.warn("response == ",res);
-                //         this.props.navigation.navigate('Bill',{res});
-                //     })
-                this.props.navigation.navigate('Bill');
+                axios.get(e.data)
+                    .then(res => {
+                        console.warn("response == ",res);
+                        this.props.navigation.navigate('Bill',{res});
+                    })
+               // this.props.navigation.navigate('Bill');
                 // Linking.openURL(e.data).catch(err => {
                 //     console.error('An error occured', err)
                 //     console.warn('DATA === ', e.data)

@@ -3,6 +3,8 @@ import CommonStyles from '../CommonStyles';
 import { View, Text, StyleSheet, TouchableHighlight, TouchableOpacity, Dimensions, FlatList } from 'react-native';
 import { Icon, Input } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
+import axios from 'axios';
+import { ViewUtils } from '../Utils';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -12,17 +14,34 @@ class Bill extends React.Component {
         super(props);
 
         this.state = {
-            // bill: props.route.params.res.data,
-            //             net_amount:0
-            bill: []
-        }
+            bill: props.route.params.res.data,
+            net_amount: 0
 
-        // console.warn("my billll -- ",this.state.bill)
-        this.state.bill = ['11', '33', '44', '55']
+        }
     }
+
+    async shareBill() {
+        axios.post('https://checkoutapp1.herokuapp.com/api/users', {
+          token: fcmToken,
+          username: this.state.username,
+          email:this.state.username
+        })
+          .then(function (response) {
+            // this.setState({ loading: false })      
+            console.log(response);
+          })
+          .catch(function (error) {
+            // this.setState({ loading: false })
+            console.log(error);
+          });
+    
+      }
+
+
     render() {
         //this.state.net_amount = this.state.bill[0].totalprice;
         // console.warn("bill --- ",this.state.bill);
+
         return (
             <View style={Style.container}>
                 <KeyboardAwareScrollView style={Style.container}>
@@ -49,9 +68,9 @@ class Bill extends React.Component {
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={{ flex: 1, fontSize: 16 }}>Food</Text>
                                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
-                                    <Text style={Style.TextStyle}>Q</Text>
-                                    <Text style={Style.TextStyle}>Unit</Text>
-                                    <Text style={Style.TextStyle}>Total</Text>
+                                    {/* <Text style={Style.TextStyle}>Q</Text>
+                                    <Text style={Style.TextStyle}>Unit</Text> */}
+                                    <Text style={Style.TextStyle}>Price</Text>
                                 </View>
 
                             </View>
@@ -63,14 +82,14 @@ class Bill extends React.Component {
                             renderItem={({ item }) => (
                                 <View>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Text style={{ flex: 1, fontSize: 16 }}>{item.name}</Text>
+                                        <Text style={{ flex: 1, fontSize: 16 }}>{item.foodItem}</Text>
                                         <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
-                                            {/* <Text style={Style.TextStyle}>{item.quantity}</Text>
-                                            <Text style={Style.TextStyle}>${item.price}</Text>
+                                            <Text style={Style.TextStyle}>${item.amount}</Text>
+                                            {/* <Text style={Style.TextStyle}>${item.price}</Text>
                                             <Text style={Style.TextStyle}>${item.TOTAL}</Text> */}
-                                            <Text style={Style.TextStyle}>2</Text>
+                                            {/* <Text style={Style.TextStyle}>2</Text>
                                             <Text style={Style.TextStyle}>100</Text>
-                                            <Text style={Style.TextStyle}>200</Text>
+                                            <Text style={Style.TextStyle}>200</Text> */}
                                         </View>
 
                                     </View>
@@ -78,24 +97,33 @@ class Bill extends React.Component {
                             )}
                         />
                     </View>
-                    <View style={{ margin: 40 }}>
+                    <View style={{ marginTop: 40, marginLeft: 10 }}>
                         <View>
-                            <View style={{ flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center' }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                                 <Text style={{ fontSize: 24 }}>Net Amount = </Text>
                                 {/* <Text style={{ fontSize: 24 }}>${this.state.net_amount}</Text> */}
-                                <Text style={{ fontSize: 24 }}>800</Text>
+                                <Text style={{ fontSize: 24 }}>300</Text>
 
                             </View>
                         </View>
                     </View>
-    
-                    <View style={Style.btnContainer}>
+                    <View style={{ flex: 1,justifyContent: 'flex-end',}}>
+                          <View style={Style.btnContainer}>
                         <TouchableOpacity style={Style.btnStyle}
                             onPress={() => this.props.navigation.navigate('Payment')}
                         >
-                            <Text style={Style.btnText}>Share</Text>
+                            <Text style={Style.btnText}>Pay</Text>
                         </TouchableOpacity>
                     </View>
+                    <View style={Style.btnContainer2}>
+                        <TouchableOpacity style={Style.btnStyle}
+                            onPress={() => ViewUtils.showToast("Work in Progress")}
+                        >
+                            <Text style={Style.btnText}>Share Bill</Text>
+                        </TouchableOpacity>
+                    </View>
+                    </View>
+                   
                 </KeyboardAwareScrollView>
             </View>
         )
@@ -145,8 +173,12 @@ const Style = StyleSheet.create({
         color: '#8BC080',
         marginLeft: 10
     }, btnContainer: {
-        width: '90%',
+        width: '95%',
         marginTop: 30,
+        alignSelf: 'center',
+    },
+    btnContainer2: {
+        width: '95%',
         alignSelf: 'center',
     },
     btnStyle: {

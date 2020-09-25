@@ -67,19 +67,19 @@ export default class CreateAccount extends Component {
   async setUser() {
     const fcmToken = await AsyncStorage.getItem('fcmToken');
     console.warn("token at create :: ",fcmToken)
-    // axios.post('https://checkoutapp1.herokuapp.com/api/stripe', {
-    //   registryToken: fcmToken,
-    //   username: this.state.username,
-    //   email:this.state.username
-    // })
-    //   .then(function (response) {
-    //     // this.setState({ loading: false })      
-    //     console.log(response);
-    //   })
-    //   .catch(function (error) {
-    //     // this.setState({ loading: false })
-    //     console.warn(error);
-    //   });
+    axios.post('https://checkoutapp1.herokuapp.com/api/users', {
+      token: fcmToken,
+      username: this.state.username,
+      email:this.state.username
+    })
+      .then(function (response) {
+        // this.setState({ loading: false })      
+        console.log(response);
+      })
+      .catch(function (error) {
+        // this.setState({ loading: false })
+        console.warn(error);
+      });
 
   }
 

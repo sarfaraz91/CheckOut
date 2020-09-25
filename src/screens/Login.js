@@ -19,6 +19,7 @@ export default class Login extends Component {
       isLoading: false,
       username: '',
       password: '',
+      token:''
     }
   }
 
@@ -37,10 +38,11 @@ export default class Login extends Component {
 
     auth()
       .signInWithEmailAndPassword(this.state.username, this.state.password)
-      .then(() => {
+      .then((data) => {
 
         this.props.navigation.navigate('MyDrawer')
         ViewUtils.showToast('You are logged in Successfully!')
+        //this.sendUserToApi();
 
       })
       .catch(error => {
@@ -146,7 +148,6 @@ _responseInfoCallback = (error, result) => {
   } else {
     this._storeData(result)
     this.props.navigation.navigate('MyDrawer')
-    console.warn("result :: ",result.picture.data.url)
   }
 }
 
@@ -168,27 +169,37 @@ _storeData = async (result) => {
 componentDidMount() {  
   auth().onAuthStateChanged((user) => {
     if (user) {
+     // this.sendUserToApi(user)
       this.props.navigation.navigate('MyDrawer')
     }
   });
+
 }
   
-// setUser(){
- 
-//     axios.post('https://checkoutapp1.herokuapp.com/api/stripe', {
-//       token: this.state.tokenId,
-//       amount: this.state.amount
-//     })
-//       .then(function (response) {
-//         // this.setState({ loading: false })      
-//         console.log(response);
-//       })
-//       .catch(function (error) {
-//         // this.setState({ loading: false })
-//         console.warn(error);
-//       });
+async sendUserToApi(user){
+  user.getIdToken().then(function(idToken) {  // <------ Check this line
+    // It shows the Firebase token now
+    console.warn("user token ::",idToken)
 
-// }
+  });
+
+ // console.warn("token ::: ",idToken)
+  // const idTokenResult = await auth().currentUser.getIdTokenResult();
+  // console.warn("tokenApi :: ",idTokenResult)
+    // axios.post('https://checkoutapp1.herokuapp.com/api/stripe', {
+    //   token: this.state.tokenId,
+    //   amount: this.state.amount
+    // })
+    //   .then(function (response) {
+    //     // this.setState({ loading: false })      
+    //     console.log(response);
+    //   })
+    //   .catch(function (error) {
+    //     // this.setState({ loading: false })
+    //     console.warn(error);
+    //   });
+
+}
 
   
 

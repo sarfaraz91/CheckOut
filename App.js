@@ -21,15 +21,16 @@ class App extends React.Component {
     FCM.instance().notifyUser = (title, message) => {
       console.warn("notifii")
       Alert.alert(
-        'Delete Activity',
-        "Are you sure you want to delete this activity?",
+        'Pay Bill',
+        "Please chose option for payment.",
         [
           {
-            text: 'Cancel',
+            text: 'Pay Full Bill',
+            onPress: () => { console.warn("full bill") }
           },
           {
-            text: 'OK',
-            onPress: () => { this.props.actions.deleteActivity(this.props.token, id) }
+            text: 'Pay Partial Bill',
+            onPress: () => { console.warn("partial bill") }
           }
         ]
       )

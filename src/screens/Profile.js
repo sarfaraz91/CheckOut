@@ -44,6 +44,7 @@ class Profile extends React.Component {
                     .ref(`/Users/${this.state.user.uid}/`)
                     .once("value")
                     .then(async snapshot => {
+                        console.warn("snapshot : ",snapshot)
                         this.setState({ username: snapshot.val().username })
                         this.setState({ phone: snapshot.val().phone })
                         this.setState({ social: snapshot.val().social })
@@ -54,7 +55,6 @@ class Profile extends React.Component {
                 this.getImage()
             }
         });
-
     }
 
     async getImage() {
@@ -68,7 +68,8 @@ class Profile extends React.Component {
 
     componentDidMount() {
         const data = this._retrieveData()
-        if (data == null) {
+        console.warn("data : ",data)
+        if (this.state.isFb == false) {
             this.getUser()
         }
 
@@ -279,6 +280,8 @@ class Profile extends React.Component {
                 this.setState({username : parsed.name})
                 this.setState({image : parsed.image})
                 return value;
+            }else{
+                this.setState({isFb : false})
             }
         } catch (error) {
             return null;

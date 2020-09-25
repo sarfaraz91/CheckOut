@@ -45,7 +45,7 @@ export default class FCM {
     } catch (error) {
       console.error(error);
     }
-    console.warn("token :: ",fcmToken)
+    console.warn("fcm token :: ",fcmToken)
     if (fcmToken) {
       await AsyncStorage.setItem('fcmToken', fcmToken);
       console.log("TOKEN IS SET")
