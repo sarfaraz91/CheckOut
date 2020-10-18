@@ -122,17 +122,23 @@ class Settings extends React.Component {
                             <View style={{ flexDirection: 'column', margin: 30 }}>
                                 <View style={Style.boxChildren}>
                                     <Icon name="user-circle" type='FontAwesome' style={Style.IconStyle} />
-                                    <Text style={Style.boxtextStyle}>{this.state.username}</Text>
+                                    <Text style={Style.boxtextStyle}>
+                                        {this.state.username != "" ? this.state.username : "Username"}
+                                    </Text>
                                 </View>
 
                                 <View style={Style.boxChildren}>
                                     <Icon name="smartphone" type='Feather' style={Style.IconStyle} />
-                                    <Text style={Style.boxtextStyle}>{this.state.phone}</Text>
+                                    <Text style={Style.boxtextStyle}>
+                                        {this.state.phone != "" ? this.state.phone : "Phone"}
+                                        </Text>
                                 </View>
 
                                 <View style={Style.boxChildren}>
                                     <Icon name="email" type='Fontisto' style={Style.IconStyle} />
-                                    <Text  style={Style.boxtextStyle}>{this.state.email}</Text>
+                                    <Text  style={Style.boxtextStyle}>
+                                        {this.state.email != "" ? this.state.email : ""}
+                                        </Text>
                                 </View>
 
 

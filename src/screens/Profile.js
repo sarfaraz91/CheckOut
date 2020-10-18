@@ -59,7 +59,7 @@ class Profile extends React.Component {
 
     async getImage() {
         const url = await storage()
-            .ref('gs://comcheckout.appspot.com')
+            .ref(`gs://comcheckout.appspot.com/${this.state.user.uid}`)
             .getDownloadURL();
 
         this.setState({ image: url })
@@ -292,25 +292,32 @@ class Profile extends React.Component {
 
 
     updateProfile() {
-
-        if (this.state.image != '') {
-            var reference = storage().ref('gs://comcheckout.appspot.com');
-            const task = reference.putFile(this.state.image)
-            task.then(() => {
-                console.log('Image uploaded to the bucket!');
-            });
-        }
-
+        console.warn("this.state.user.uid :: ",this.state.user.uid)
         database()
-            .ref(`/Users/${this.state.user.uid}/`)
-            .set({
-                email: this.state.email,
-                birthday: this.state.birthday,
-                phone: this.state.phone,
-                //social: this.state.social,
-                username: this.state.username,
-            })
-            .then(() => ViewUtils.showAlert("Update Successfully."));
+        .ref(`/Users/${this.state.user.uid}/`)
+        .set({
+            email: this.state.email,
+            birthday: this.state.birthday,
+            phone: this.state.phone,
+            //social: this.state.social,
+            username: this.state.username,
+        })
+        .then(() => {
+             ViewUtils.showAlert("Update Successfully.")
+            //console.warn("done")
+        });
+
+        // if (this.state.image != '') {
+        //     var reference = storage().ref(`gs://comcheckout.appspot.com/${this.state.user.uid}`);
+        //     const task = reference.putFile(this.state.image)
+        //     task.then(() => {
+        //         console.log('Image uploaded to the bucket!');
+        //     });
+        // }
+        
+     
+
+        
     }
 }
 
