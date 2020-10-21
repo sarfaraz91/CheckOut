@@ -17,6 +17,7 @@ class Scanner extends React.Component {
     onSuccess = e => {
         try {
             if (e.data != undefined) {
+                console.warn("e.data :: ",e.data)
                 axios.get(e.data)
                     .then(res => {
                         console.warn("response == ",res);

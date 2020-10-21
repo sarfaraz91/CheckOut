@@ -5,6 +5,8 @@ import { Icon, Input } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import axios from 'axios';
 import { ViewUtils } from '../Utils';
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -14,33 +16,60 @@ class Bill extends React.Component {
         super(props);
 
         this.state = {
+            user: {},
             bill: props.route.params.res.data,
             net_amount: 0
 
         }
     }
 
+    componentDidMount(){
+        auth().onAuthStateChanged((user) => {
+            this.setState({ user: user })
+            if (user) {
+                this.setState({ user: user })
+
+                database()
+                    .ref(`/Groups/${this.state.user.uid}/Friends`)
+                    .once("value")
+                    .then(async snapshot => {
+                        snapshot.forEach(item => {
+                            
+                            const temp = item.val();
+                            console.warn("tem : ",temp)
+                        });
+
+                    });
+
+            }
+        });
+    }
+
     async shareBill() {
         axios.post('https://checkoutapp1.herokuapp.com/api/users', {
-          token: fcmToken,
-          username: this.state.username,
-          email:this.state.username
+            token: fcmToken,
+            username: this.state.username,
+            email: this.state.username
         })
-          .then(function (response) {
-            // this.setState({ loading: false })      
-            console.log(response);
-          })
-          .catch(function (error) {
-            // this.setState({ loading: false })
-            console.log(error);
-          });
-    
-      }
+            .then(function (response) {
+                // this.setState({ loading: false })      
+                console.log(response);
+            })
+            .catch(function (error) {
+                // this.setState({ loading: false })
+                console.log(error);
+            });
+
+    }
 
 
     render() {
-        //this.state.net_amount = this.state.bill[0].totalprice;
-        // console.warn("bill --- ",this.state.bill);
+        var total = 0;
+        for (var i in this.state.bill) {
+            total += this.state.bill[i].amount;
+        }
+
+        console.warn("total : ", total)
 
         return (
             <View style={Style.container}>
@@ -102,28 +131,28 @@ class Bill extends React.Component {
                             <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                                 <Text style={{ fontSize: 24 }}>Net Amount = </Text>
                                 {/* <Text style={{ fontSize: 24 }}>${this.state.net_amount}</Text> */}
-                                <Text style={{ fontSize: 24 }}>300</Text>
+                                <Text style={{ fontSize: 24 }}>{total}</Text>
 
                             </View>
                         </View>
                     </View>
-                    <View style={{ flex: 1,justifyContent: 'flex-end',}}>
-                          <View style={Style.btnContainer}>
-                        <TouchableOpacity style={Style.btnStyle}
-                            onPress={() => this.props.navigation.navigate('Payment')}
-                        >
-                            <Text style={Style.btnText}>Pay</Text>
-                        </TouchableOpacity>
+                    <View style={{ flex: 1, justifyContent: 'flex-end', }}>
+                        <View style={Style.btnContainer}>
+                            <TouchableOpacity style={Style.btnStyle}
+                                onPress={() => this.props.navigation.navigate('Payment')}
+                            >
+                                <Text style={Style.btnText}>Pay</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={Style.btnContainer2}>
+                            <TouchableOpacity style={Style.btnStyle}
+                                onPress={() => ViewUtils.showToast("Work in Progress")}
+                            >
+                                <Text style={Style.btnText}>Share Bill</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <View style={Style.btnContainer2}>
-                        <TouchableOpacity style={Style.btnStyle}
-                            onPress={() => ViewUtils.showToast("Work in Progress")}
-                        >
-                            <Text style={Style.btnText}>Share Bill</Text>
-                        </TouchableOpacity>
-                    </View>
-                    </View>
-                   
+
                 </KeyboardAwareScrollView>
             </View>
         )
