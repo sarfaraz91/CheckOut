@@ -31,6 +31,7 @@ class MenuSlider extends React.Component {
 
         const menuComponents = [
             { name: 'Home', iconName: 'home', iconFamily: 'Feather', iconSize: '18', route: 'Home' },
+            { name: 'Order', iconName: 'kitchen', iconFamily: 'MaterialIcons', iconSize: '18', route: 'Order' },
             { name: 'Add Friends', iconName: 'addusergroup', iconFamily: 'AntDesign', iconSize: '18', route: 'AddFriends' },
             { name: 'Edit Profile', iconName: 'profile', iconFamily: 'AntDesign', iconSize: '18', route: 'Profile' },
             { name: 'Settings', iconName: 'setting', iconFamily: 'AntDesign', iconSize: '18', route: 'Settings' },
