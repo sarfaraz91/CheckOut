@@ -17,10 +17,12 @@ class Bill extends React.Component {
 
         this.state = {
             user: {},
-            bill: props.route.params.res.data,
+            bill: props.route.params,
             net_amount: 0
 
         }
+
+        console.warn("new props :: ",props.route.params)
     }
 
     componentDidMount(){
@@ -36,7 +38,7 @@ class Bill extends React.Component {
                         snapshot.forEach(item => {
                             
                             const temp = item.val();
-                            console.warn("tem : ",temp)
+                           // console.warn("tem : ",temp)
                         });
 
                     });
@@ -65,11 +67,11 @@ class Bill extends React.Component {
 
     render() {
         var total = 0;
-        for (var i in this.state.bill) {
-            total += this.state.bill[i].amount;
-        }
+        // for (var i in this.state.bill) {
+        //     total += this.state.bill[i].amount;
+        // }
 
-        console.warn("total : ", total)
+        //console.warn("total : ", total)
 
         return (
             <View style={Style.container}>
@@ -113,7 +115,7 @@ class Bill extends React.Component {
                                     <View style={{ flexDirection: 'row', }}>
                                         <Text style={{ flex: 1, fontSize: 16 }}>{item.foodItem}</Text>
                                         <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
-                                            <Text style={Style.TextStyle}>${item.amount}</Text>
+                                            <Text style={Style.TextStyle}>$</Text>
                                             {/* <Text style={Style.TextStyle}>${item.price}</Text>
                                             <Text style={Style.TextStyle}>${item.TOTAL}</Text> */}
                                             {/* <Text style={Style.TextStyle}>2</Text>

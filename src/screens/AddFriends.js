@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ViewUtils } from '../Utils';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import Loader from '.././assets/components/Loader';
 
 export default class AddFriends extends Component {
 
@@ -16,7 +17,7 @@ export default class AddFriends extends Component {
 
         this.state = {
             emails: [],
-            isLoading: true,
+            isLoading: false,
             selected: "",
             userId: '',
             emailExist: false
@@ -33,18 +34,25 @@ export default class AddFriends extends Component {
             }
         });
 
+        this.setState({ isLoading: true })
 
         database()
             .ref('/Users/')
             .once("value")
             .then(async snapshot => {
-                let emails = [];
-                snapshot.forEach(item => {
-
-                    const temp = item.val();
-                    emails.push(temp);
-                });
-                this.setState({ emails: emails })
+                this.setState({ isLoading: false })
+                if(snapshot.val()){
+                    let emails = [];
+                    snapshot.forEach(item => {
+    
+                        const temp = item.val();
+                        emails.push(temp);
+                    });
+                    this.setState({ emails: emails })
+                }else{
+                    ViewUtils.showToast('No Record Found')
+                }
+                
             });
 
     }
@@ -100,7 +108,7 @@ export default class AddFriends extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-
+                <Loader loading={this.state.isLoading} />
                 <View
                     style={[
                         CommonStyles.backButtonStyle
@@ -127,11 +135,14 @@ export default class AddFriends extends Component {
             ViewUtils.showAlert('Please select a Friend to add.')
             return;
         }
+        this.setState({ isLoading: true })
 
         database()
             .ref(`/Groups/${this.state.userId}/Friends/`)
             .once("value")
             .then(async snapshot => {
+                this.setState({ isLoading: false })
+
                 if(snapshot != null){
                     snapshot.forEach(item => {
                         const temp = item.val();

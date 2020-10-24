@@ -20,7 +20,7 @@ class Scanner extends React.Component {
                 console.warn("e.data :: ",e.data)
                 axios.get(e.data)
                     .then(res => {
-                        console.warn("response == ",res);
+                        //console.warn("response == ",res);
                         this.props.navigation.navigate('Bill',{res});
                     })
                // this.props.navigation.navigate('Bill');
