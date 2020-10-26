@@ -7,7 +7,7 @@ import { Icon, Input } from 'native-base';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { LoginManager } from 'react-native-fbsdk';
-import {AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native';
 
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -54,17 +54,17 @@ class Settings extends React.Component {
         }
     }
 
-    
+
     _retrieveData = async () => {
         try {
             const value = await AsyncStorage.getItem('user');
             if (value !== null) {
-                this.setState({isFb : true})
-                let parsed = JSON.parse(value);  
-                this.setState({username : parsed.name})
+                this.setState({ isFb: true })
+                let parsed = JSON.parse(value);
+                this.setState({ username: parsed.name })
                 return value;
-            }else{
-                this.setState({isFb : false})
+            } else {
+                this.setState({ isFb: false })
             }
         } catch (error) {
             return null;
@@ -73,11 +73,11 @@ class Settings extends React.Component {
     };
 
     signOutUser = async () => {
-        if(this.state.isFb == true){
+        if (this.state.isFb == true) {
             LoginManager.logOut()
             this.removeItemValue()
             this.props.navigation.navigate('Login');
-        }else{
+        } else {
             try {
                 await auth().signOut();
                 this.props.navigation.navigate('Login');
@@ -87,16 +87,16 @@ class Settings extends React.Component {
         }
 
     }
-    
+
     async removeItemValue() {
         try {
             await AsyncStorage.removeItem('user');
             console.warn("hogya")
             return true;
-            
+
         }
-        catch(exception) {
-            console.warn(" nh hogya :: ",exception)
+        catch (exception) {
+            console.warn(" nh hogya :: ", exception)
             return false;
         }
     }
@@ -122,23 +122,37 @@ class Settings extends React.Component {
                             <View style={{ flexDirection: 'column', margin: 30 }}>
                                 <View style={Style.boxChildren}>
                                     <Icon name="user-circle" type='FontAwesome' style={Style.IconStyle} />
-                                    <Text style={Style.boxtextStyle}>
-                                        {this.state.username != "" ? this.state.username : "Username"}
+                                    {this.state.username != undefined ?
+                                        <Text style={Style.boxtextStyle}>
+                                            {this.state.username}
+                                        </Text>
+                                        :
+                                        <Text style={Style.boxtextStyle}>
+                                            Username
                                     </Text>
+                                    }
+
                                 </View>
 
                                 <View style={Style.boxChildren}>
                                     <Icon name="smartphone" type='Feather' style={Style.IconStyle} />
-                                    <Text style={Style.boxtextStyle}>
-                                        {this.state.phone != "" ? this.state.phone : "Phone"}
+                
+                                    {this.state.phone != undefined ?
+                                        <Text style={Style.boxtextStyle}>
+                                            {this.state.phone}
+                                        </Text> :
+                                        <Text style={Style.boxtextStyle}>
+                                            Phone
                                         </Text>
+                                    }
+
                                 </View>
 
                                 <View style={Style.boxChildren}>
                                     <Icon name="email" type='Fontisto' style={Style.IconStyle} />
-                                    <Text  style={Style.boxtextStyle}>
+                                    <Text style={Style.boxtextStyle}>
                                         {this.state.email != "" ? this.state.email : ""}
-                                        </Text>
+                                    </Text>
                                 </View>
 
 
@@ -146,18 +160,18 @@ class Settings extends React.Component {
                                     <Icon name="appstore-o" type='AntDesign' style={Style.IconStyle} />
                                     <TextInput placeholderTextColor="#8BC080" style={Style.boxtextStyle}>Apps and sessions</TextInput>
                                 </View> */}
-{/* 
+                                {/* 
                                 <View style={Style.boxChildren}>
                                     <Icon name="eye" type='Feather' style={Style.IconStyle} />
                                     <Text  style={Style.boxtextStyle}>Location</Text>
                                 </View> */}
 
                                 <View style={Style.boxChildren}>
-                                <Icon name="logout" type='AntDesign' style={Style.IconStyle} />
-                                    <TouchableOpacity onPress={()=> this.signOutUser()}>
-                                    <Text  style={Style.boxtextStyle}>Logout</Text>
+                                    <Icon name="logout" type='AntDesign' style={Style.IconStyle} />
+                                    <TouchableOpacity onPress={() => this.signOutUser()}>
+                                        <Text style={Style.boxtextStyle}>Logout</Text>
                                     </TouchableOpacity>
-                                    
+
                                 </View>
 
                             </View>

@@ -11,26 +11,22 @@ import axios from 'axios';
 class Scanner extends React.Component {
     constructor(props) {
         super(props);
-    }
 
+        // if(this.props.route.params){
+        //     this.state={
+        //         billId:props.route.params
+        //     }
+        // }
+    }
   
     onSuccess = e => {
         try {
             if (e.data != undefined) {
-                console.warn("e.data :: ",e.data)
                 axios.get(e.data)
                     .then(res => {
-                        //console.warn("response == ",res);
-                        this.props.navigation.navigate('Bill',{res});
+                        this.props.navigation.navigate('Bill',{res: res});
                     })
-               // this.props.navigation.navigate('Bill');
-                // Linking.openURL(e.data).catch(err => {
-                //     console.error('An error occured', err)
-                //     console.warn('DATA === ', e.data)
-                //     //this.props.navigation.navigate('Bill',{data:e.data});
-                // });
-
-                console.warn('DATA === ', e.data)
+    
             }
         } catch (error) {
             console.log(error);

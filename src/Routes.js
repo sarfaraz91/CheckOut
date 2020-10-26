@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Profile from './screens/Profile'
 import Settings from './screens/Settings'
@@ -37,7 +36,6 @@ export default class Routes extends React.Component {
 
   render() {
     return (
-      <NavigationContainer>
         <Stack.Navigator>
 
           <Stack.Screen
@@ -115,7 +113,6 @@ export default class Routes extends React.Component {
 
 
         </Stack.Navigator>
-      </NavigationContainer>
     );
   }
 }

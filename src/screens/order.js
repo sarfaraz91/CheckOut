@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ImageBackground, StyleSheet, TextInput, FlatList, Alert } from 'react-native';
+import { Text, View, ImageBackground, StyleSheet, TextInput, FlatList, Alert,AsyncStorage } from 'react-native';
 import CommonStyles from '../CommonStyles';
 import { Icon, Item, Picker } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -82,12 +82,14 @@ export default class Order extends Component {
         })
             .then(function (response) {
                 // this.setState({ loading: false })      
-                console.warn("res :: ",response);
+                console.warn("res :: ",response.data._id);
                 self.setState({ isLoading: false })
                 self.setState({itemName: ''})
                 self.setState({itemPrice: 0})
                 self.setState({foodItem: []})
                 ViewUtils.showToast('Order sent successfully!')
+                AsyncStorage.setItem('billId', response.data._id)
+                self.props.navigation.navigate('Home')
             })
             .catch(function (error) {
                 self.setState({ loading: false })

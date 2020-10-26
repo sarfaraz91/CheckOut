@@ -20,20 +20,13 @@ export default class AddFriends extends Component {
             isLoading: false,
             selected: "",
             userId: '',
-            emailExist: false
+            emailExist: false,
         };
 
 
     }
 
-    componentDidMount() {
-
-        auth().onAuthStateChanged((user) => {
-            if (user) {
-                this.setState({ userId: user.uid })
-            }
-        });
-
+    _getAllUsers(userEmail){
         this.setState({ isLoading: true })
 
         database()
@@ -44,9 +37,11 @@ export default class AddFriends extends Component {
                 if(snapshot.val()){
                     let emails = [];
                     snapshot.forEach(item => {
-    
                         const temp = item.val();
-                        emails.push(temp);
+                        if(temp.email !== userEmail){
+                            emails.push(temp);
+                        }
+                        
                     });
                     this.setState({ emails: emails })
                 }else{
@@ -54,6 +49,18 @@ export default class AddFriends extends Component {
                 }
                 
             });
+    }
+
+    componentDidMount() {
+        
+        auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({ userId: user.uid })
+                this._getAllUsers(user.email)
+            }
+        });
+        
+       
 
     }
 

@@ -42,7 +42,7 @@ export default class Login extends Component {
 
         this.props.navigation.navigate('MyDrawer')
         ViewUtils.showToast('You are logged in Successfully!')
-        //this.sendUserToApi();
+        this.updateToken(this.state.username);
 
       })
       .catch(error => {
@@ -60,6 +60,24 @@ export default class Login extends Component {
       })
       .finally(() => {
         this.setState({ isLoading: false });
+      });
+  }
+
+  async updateToken(email){
+    const fcmToken = await AsyncStorage.getItem('fcmToken');
+    console.warn("token at create :: ",fcmToken)
+    console.warn("email:: ",email)
+    axios.post('https://checkoutapp1.herokuapp.com/api/updateFCM', {
+      token: fcmToken,
+      userIds: email,
+    })
+      .then(function (response) {
+        // this.setState({ loading: false })      
+        console.log(response);
+      })
+      .catch(function (error) {
+        // this.setState({ loading: false })
+        console.warn(error);
       });
   }
 

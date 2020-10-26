@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "419819428106",
-    "firebase_url": "https://comcheckout.firebaseio.com",
-    "project_id": "comcheckout",
-    "storage_bucket": "comcheckout.appspot.com"
+    "project_number": "667133046905",
+    "firebase_url": "https://checkoutfyp-490fe.firebaseio.com",
+    "project_id": "checkoutfyp-490fe",
+    "storage_bucket": "checkoutfyp-490fe.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:419819428106:android:3f4cc38339c3cedfa382f3",
+        "mobilesdk_app_id": "1:667133046905:android:b5a5b87ac6158e88a824a8",
         "android_client_info": {
           "package_name": "com.checkout"
         }
       },
       "oauth_client": [
         {
-          "client_id": "419819428106-6cn4fu7aq4keftek05prqfcc18s1e9kt.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.checkout",
-            "certificate_hash": "e0ed1718130790062a663c93a3ed18fe5ba51d90"
-          }
-        },
-        {
-          "client_id": "419819428106-8qv1uj5kdngrf4n3t37pk9meoqpm2j6e.apps.googleusercontent.com",
+          "client_id": "667133046905-o113rn15mtkmfhu063op01o3i2664eea.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC1CE_-mZUL1NQq3zQ-J_3UVinNTq2uWeA"
+          "current_key": "AIzaSyASHxxT8HfnJpeEa41CEkpm0WRyp7giM9g"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "419819428106-8qv1uj5kdngrf4n3t37pk9meoqpm2j6e.apps.googleusercontent.com",
+              "client_id": "667133046905-o113rn15mtkmfhu063op01o3i2664eea.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

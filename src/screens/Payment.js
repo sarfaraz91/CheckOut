@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import Button from '../../components/Button';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert,AsyncStorage } from 'react-native';
 import stripe from 'tipsi-stripe';
 import axios from 'axios';
 import CommonStyles from '../CommonStyles';
@@ -19,12 +19,19 @@ export default class Payment extends PureComponent {
     this.state = {
       loading: false,
       token: null,
-      amount: 0,
-      tokenId: null
+      amount:'',
+      tokenId: null,
+      billId:''
     }
+
+
   }
 
   componentDidMount() {
+    this._getData()
+  //  this.setState({amout : this.props.route.params})
+    console.warn("props.route.params :: ",this.props)
+
     this.handleCardPayPress();
   }
 
@@ -56,27 +63,59 @@ export default class Payment extends PureComponent {
     }
   }
 
+  async _getData(){
+    const billId =  await AsyncStorage.getItem('billId')
+
+    const dividedFlag =  await AsyncStorage.getItem('dividedFlag', (err, value) => {
+      if (err) {
+          console.log(err)
+      } else {
+        console.warn("df :: ",JSON.parse(value))
+          JSON.parse(value) 
+      }
+  })
+
+    const totalFlag =  await AsyncStorage.getItem('totalFlag', (err, value) => {
+      if (err) {
+          console.log(err)
+      } else {
+        console.warn("tf :: ",JSON.parse(value))
+          JSON.parse(value) // boolean false
+      }
+  })
+
+
+    const dividedBill =  await AsyncStorage.getItem('dividedBill')
+    const totalBill =  await AsyncStorage.getItem('totalBill')
+    
+    if(totalFlag === 'true'){
+      this.setState({amount:totalBill})
+    }else if(dividedFlag === 'true'){
+      this.setState({amount:dividedBill})
+    }
+
+
+    this.setState({billId:billId})        
+}
+
   makePayment = async () => {
 
-    if (this.state.amount != null && this.state.amount != 0) {
+    if (this.state.amount != null) {
       //this.setState({amount: this.state.amount*100})
       // this.setState({ loading: true })
+      console.warn("token:,", this.state.tokenId)
+      console.warn("this.state.billId :: ",this.state.billId)
+      console.warn('this.state.amount ::: ',this.state.amount)
+      var self = this
       axios.post('https://checkoutapp1.herokuapp.com/api/stripe', {
         token: this.state.tokenId,
-        amount: this.state.amount
+        amount: this.state.amount,
+        billId:this.state.billId
       })
         .then(function (response) {
           // this.setState({ loading: false })
-          ViewUtils.showAlert('Payment is Done!')
-          Alert.alert( 
-            "CheckOut",
-            "Payment is Done!",
-            [
-
-              { text: "OK", onPress: () => {} }
-            ],
-            { cancelable: false }
-          );
+          ViewUtils.showAlert('Bill Paid Successfully! ')
+          self.props.navigation.navigate('Home')
           console.log(response);
         })
         .catch(function (error) {
@@ -115,7 +154,7 @@ export default class Payment extends PureComponent {
               {/* <TextInput placeholder="Enter amount" placeholderTextColor="#8BC080" style={styles.TextStyle}></TextInput> */}
               <TextInput
                 value={this.state.amount}
-                onChangeText={val => this.setState({ amount: val })}
+                editable = {false}
                 underlineColorAndroid='transparent'
                 placeholderTextColor='black'
                 placeholder="Enter amount"

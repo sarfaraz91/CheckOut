@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
-import { View, Text, StyleSheet, TouchableHighlight, TouchableOpacity, Dimensions, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, FlatList,Alert,AsyncStorage } from 'react-native';
 import { Icon, Input } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import axios from 'axios';
 import { ViewUtils } from '../Utils';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
+import Loader from '.././assets/components/Loader';
+
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -16,18 +18,31 @@ class Bill extends React.Component {
         super(props);
 
         this.state = {
+            isLoading: false,
             user: {},
-            bill: props.route.params,
-            net_amount: 0
-
+            allBills: props.route.params.res.data,
+            myBill:[],
+            billId: '',
+            net_amount: 0,
+            emails:[],
+            myBill: []
         }
 
-        console.warn("new props :: ",props.route.params)
+    }   
+
+    async _getBill(){
+        const billId =  await AsyncStorage.getItem('billId')
+        this.setState({billId:billId})        
+        const bill = this.state.allBills.filter(x => x._id == this.state.billId)
+        Object.keys(bill).forEach(key => {
+         this.setState({myBill:bill[key].foodItem})
+         this.setState({net_amount:bill[key].amount})
+       });
     }
 
-    componentDidMount(){
+    componentDidMount() {
+        this._getBill()
         auth().onAuthStateChanged((user) => {
-            this.setState({ user: user })
             if (user) {
                 this.setState({ user: user })
 
@@ -35,43 +50,68 @@ class Bill extends React.Component {
                     .ref(`/Groups/${this.state.user.uid}/Friends`)
                     .once("value")
                     .then(async snapshot => {
+                        let emails = [];
+                       // console.warn("this.state.user.email ::: ",this.state.user.email)
+                        emails.push(this.state.user.email)
                         snapshot.forEach(item => {
-                            
-                            const temp = item.val();
-                           // console.warn("tem : ",temp)
-                        });
 
+                            const temp = item.val();
+                            emails.push(temp.email);
+                        })
+                       // console.warn("emails ::: ",emails)
+
+                        this.setState({ emails: emails });
                     });
 
             }
         });
     }
 
+    showAlertForShare() {
+        Alert.alert(
+            "Share Bill",
+            `Do you want to share bill with your friends?`,
+            [
+                {
+                    text: "No",
+                    onPress: () => console.log("Cancel Pressed"),
+                },
+                { text: "Yes", onPress: () => this.shareBill() }
+            ],
+            { cancelable: false }
+        );
+    }
+
     async shareBill() {
-        axios.post('https://checkoutapp1.herokuapp.com/api/users', {
-            token: fcmToken,
-            username: this.state.username,
-            email: this.state.username
+        var self = this;
+      //  self.setState({ isLoading: true })
+        // console.warn('dsadsads :: ',this.state.emails);
+
+        axios.post('https://checkoutapp1.herokuapp.com/api/noti', {
+            userIds: this.state.emails,
+            billId: this.state.billId,
+            isDivide: true
         })
             .then(function (response) {
-                // this.setState({ loading: false })      
-                console.log(response);
+                console.warn('res :: ',response);
+                self.props.navigation.navigate('Payment')
+               // self.setState({ loading: false })      
             })
             .catch(function (error) {
-                // this.setState({ loading: false })
-                console.log(error);
+                console.warn('err :: ',error);
+
+               // self.setState({ loading: false })
             });
 
     }
 
 
     render() {
-        var total = 0;
-        // for (var i in this.state.bill) {
-        //     total += this.state.bill[i].amount;
-        // }
-
-        //console.warn("total : ", total)
+        
+      
+        //console.warn("ss :: ",myBill[0])
+        // this.state.myBill = myBill[0].foodItem
+        // this.state.net_amount = myBill[0].amount
 
         return (
             <View style={Style.container}>
@@ -97,10 +137,8 @@ class Bill extends React.Component {
                     <View style={{ margin: 10 }}>
                         <View>
                             <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ flex: 1, fontSize: 16 }}>Food</Text>
+                                <Text style={{ flex: 1, fontSize: 20 }}>Item</Text>
                                 <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
-                                    {/* <Text style={Style.TextStyle}>Q</Text>
-                                    <Text style={Style.TextStyle}>Unit</Text> */}
                                     <Text style={Style.TextStyle}>Price</Text>
                                 </View>
 
@@ -109,18 +147,13 @@ class Bill extends React.Component {
                     </View>
                     <View style={{ marginLeft: 10, marginRight: 10 }}>
                         <FlatList
-                            data={this.state.bill}
+                            data={this.state.myBill}
                             renderItem={({ item }) => (
                                 <View>
                                     <View style={{ flexDirection: 'row', }}>
-                                        <Text style={{ flex: 1, fontSize: 16 }}>{item.foodItem}</Text>
+                                        <Text style={{ flex: 1, fontSize: 16,color:'#8BC080' }}>{item.item}</Text>
                                         <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
-                                            <Text style={Style.TextStyle}>$</Text>
-                                            {/* <Text style={Style.TextStyle}>${item.price}</Text>
-                                            <Text style={Style.TextStyle}>${item.TOTAL}</Text> */}
-                                            {/* <Text style={Style.TextStyle}>2</Text>
-                                            <Text style={Style.TextStyle}>100</Text>
-                                            <Text style={Style.TextStyle}>200</Text> */}
+                                            <Text style={{fontSize: 16,color:'#8BC080'}}>${item.price}</Text>
                                         </View>
 
                                     </View>
@@ -130,11 +163,8 @@ class Bill extends React.Component {
                     </View>
                     <View style={{ marginTop: 40, marginLeft: 10 }}>
                         <View>
-                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-                                <Text style={{ fontSize: 24 }}>Net Amount = </Text>
-                                {/* <Text style={{ fontSize: 24 }}>${this.state.net_amount}</Text> */}
-                                <Text style={{ fontSize: 24 }}>{total}</Text>
-
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-end',marginRight:10 }}>
+                            <Text style={{ fontSize: 20,color:'#8BC080' }}>Total = ${this.state.net_amount}</Text>
                             </View>
                         </View>
                     </View>
@@ -143,18 +173,18 @@ class Bill extends React.Component {
                             <TouchableOpacity style={Style.btnStyle}
                                 onPress={() => this.props.navigation.navigate('Payment')}
                             >
-                                <Text style={Style.btnText}>Pay</Text>
+                                <Text style={Style.btnText}>Pay Full Bill</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={Style.btnContainer2}>
                             <TouchableOpacity style={Style.btnStyle}
-                                onPress={() => ViewUtils.showToast("Work in Progress")}
+                                onPress={() => this.showAlertForShare()}
                             >
                                 <Text style={Style.btnText}>Share Bill</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-
+                    <Loader loading={this.state.isLoading} />
                 </KeyboardAwareScrollView>
             </View>
         )
@@ -194,8 +224,8 @@ const Style = StyleSheet.create({
         marginLeft: 10
     },
     TextStyle: {
-        color: '#8BC080',
-        fontSize: 16,
+        color: 'black',
+        fontSize: 20,
         textAlign: 'center',
 
     },
