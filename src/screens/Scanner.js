@@ -4,38 +4,56 @@ import { Icon } from 'native-base';
 import { View, StyleSheet, StatusBar, SafeAreaView, Text, TouchableOpacity, Linking } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
-import { BackHandler, Alert } from 'react-native';
+import { BackHandler, Alert,AsyncStorage } from 'react-native';
 import axios from 'axios';
 
 
 class Scanner extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            billId: ''
+        }
 
-        // if(this.props.route.params){
-        //     this.state={
-        //         billId:props.route.params
-        //     }
-        // }
     }
-  
+
     onSuccess = e => {
         try {
             if (e.data != undefined) {
-                axios.get(e.data)
+                if(this.state.billId != ''){
+                    axios.get(e.data)
                     .then(res => {
-                        this.props.navigation.navigate('Bill',{res: res});
+                        this.props.navigation.navigate('Bill', { res: res });
                     })
-    
+                }else{
+                    this._showAlertForOrder()
+                }
+               
+
             }
         } catch (error) {
             console.log(error);
         }
     }
 
+    _showAlertForOrder(){
+        Alert.alert(
+            "Add Order",
+            `Please Add Your Order First!`,
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                },
+                { text: "Add Order", onPress: () => this.props.navigation.navigate('Order') }
+            ],
+            { cancelable: false }
+        );
+    }
+
 
     render() {
-    
+
 
         return (
             <View style={[CommonStyles.container, { backgroundColor: '#F7FAFE' }]}>
@@ -43,16 +61,16 @@ class Scanner extends React.Component {
                     onRead={this.onSuccess}
                     // flashMode={RNCamera.Constants.FlashMode.torch}
                     topContent={
-  
-                            <Text style={styles.textBold}>Please scan the Barcode for Payment</Text> 
+
+                        <Text style={styles.textBold}>Please scan the Barcode for Payment</Text>
 
                     }
-                    // bottomContent={
+                // bottomContent={
 
-                    //     <TouchableOpacity style={styles.buttonTouchable}>
-                    //         <Text style={styles.buttonText}>OK. Got it!</Text>
-                    //     </TouchableOpacity>
-                    // }
+                //     <TouchableOpacity style={styles.buttonTouchable}>
+                //         <Text style={styles.buttonText}>OK. Got it!</Text>
+                //     </TouchableOpacity>
+                // }
                 />
 
                 <View
@@ -96,7 +114,23 @@ class Scanner extends React.Component {
 
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+        this._GetBillId()
+    }
 
+    async _GetBillId() {
+        try {
+            let billId = await AsyncStorage.getItem('billId');
+            console.warn("billId : ",billId)
+            if (billId != null) {
+                this.setState({billId : billId})
+            }
+            else {
+                // do something else
+            }
+        } catch (error) {
+            console.warn("error : ",error)
+            // Error retrieving data
+        }
     }
 
     componentWillUnmount() {

@@ -13,6 +13,8 @@ import Bill from './screens/Bill';
 import Payment from './screens/Payment';
 import AddFriends from './screens/AddFriends';
 import Order from './screens/order';
+import Invoice from './screens/Invoice';
+import Itemwise from './screens/Itemwise';
 
 
 
@@ -36,71 +38,91 @@ export default class Routes extends React.Component {
 
   render() {
     return (
-        <Stack.Navigator>
+      <Stack.Navigator>
 
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{
-              headerShown: false,
-              headerTitleAlign: 'center',
-              headerStyle:
-              {
-                backgroundColor: '#c0d4e2'
-              },
-            }}
-          />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{
+            headerShown: false,
+            headerTitleAlign: 'center',
+            headerStyle:
+            {
+              backgroundColor: '#c0d4e2'
+            },
+          }}
+        />
 
-          <Stack.Screen
-            name="ItemList"
-            component={ItemList}
-            options={{
-              headerShown: false,
-              headerTitleAlign: 'center',
-              headerStyle:
-              {
-                backgroundColor: '#c0d4e2'
-              },
-            }}
-          />
+        <Stack.Screen
+          name="ItemList"
+          component={ItemList}
+          options={{
+            headerShown: false,
+            headerTitleAlign: 'center',
+            headerStyle:
+            {
+              backgroundColor: '#c0d4e2'
+            },
+          }}
+        />
 
-          <Stack.Screen
-            name="MyDrawer"
-            component={this._getDrawerComponent}
-            options={{ headerShown: false }}
-          />
+        <Stack.Screen
+          name="MyDrawer"
+          component={this._getDrawerComponent}
+          options={{ headerShown: false }}
+        />
 
-          <Stack.Screen
-            name="CreateAccount"
-            component={CreateAccount}
-            options={{
-              headerShown: false,
-              headerTitleAlign: 'center',
-              headerStyle: { backgroundColor: '#c0d4e2' },
-            }}
-          />
+        <Stack.Screen
+          name="CreateAccount"
+          component={CreateAccount}
+          options={{
+            headerShown: false,
+            headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: '#c0d4e2' },
+          }}
+        />
 
-          <Stack.Screen
-            name="Bill"
-            component={Bill}
-            options={{
-              headerShown: false,
-              headerTitleAlign: 'center',
-              headerStyle: { backgroundColor: '#c0d4e2' },
-            }}
-          />
+        <Stack.Screen
+          name="Bill"
+          component={Bill}
+          options={{
+            headerShown: false,
+            headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: '#c0d4e2' },
+          }}
+        />
 
-          <Stack.Screen
-            name="Payment"
-            component={Payment}
-            options={{
-              headerShown: false,
-              headerTitleAlign: 'center',
-              headerStyle: { backgroundColor: '#c0d4e2' },
-            }}
-          />
+        <Stack.Screen
+          name="Payment"
+          component={Payment}
+          options={{
+            headerShown: false,
+            headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: '#c0d4e2' },
+          }}
+        />
 
-          {/* <Stack.Screen
+        <Stack.Screen
+          name="Invoice"
+          component={Invoice}
+          options={{
+            headerShown: false,
+            headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: '#c0d4e2' },
+          }}
+        />
+
+<Stack.Screen
+          name="Itemwise"
+          component={Itemwise}
+          options={{
+            headerShown: false,
+            headerTitleAlign: 'center',
+            headerStyle: { backgroundColor: '#c0d4e2' },
+          }}
+        />
+
+        {/* <Stack.Screen
             name="AddFriends"
             component={AddFriends}
             options={{
@@ -112,7 +134,7 @@ export default class Routes extends React.Component {
 
 
 
-        </Stack.Navigator>
+      </Stack.Navigator>
     );
   }
 }

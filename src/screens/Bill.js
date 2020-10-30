@@ -94,7 +94,7 @@ class Bill extends React.Component {
         })
             .then(function (response) {
                 console.warn('res :: ',response);
-                self.props.navigation.navigate('Payment')
+              //  self.props.navigation.navigate('Payment')
                // self.setState({ loading: false })      
             })
             .catch(function (error) {

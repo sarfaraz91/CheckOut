@@ -65,6 +65,7 @@ export default class Login extends Component {
 
   async updateToken(email){
     const fcmToken = await AsyncStorage.getItem('fcmToken');
+    await AsyncStorage.setItem('email',email);
     console.warn("token at create :: ",fcmToken)
     console.warn("email:: ",email)
     axios.post('https://checkoutapp1.herokuapp.com/api/updateFCM', {
@@ -178,6 +179,7 @@ _storeData = async (result) => {
     await AsyncStorage.setItem(
       'user',JSON.stringify(obj)
     );
+    //await AsyncStorage.setItem('email',email);
   } catch (error) {
     // Error saving data
   }

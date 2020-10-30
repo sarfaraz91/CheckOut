@@ -1,11 +1,12 @@
 import React, { PureComponent } from 'react';
 import Button from '../../components/Button';
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert,AsyncStorage } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert, AsyncStorage, Modal, } from 'react-native';
 import stripe from 'tipsi-stripe';
 import axios from 'axios';
 import CommonStyles from '../CommonStyles';
 import { Icon, Input } from 'native-base';
 import { ViewUtils } from '../Utils';
+import Loader from '.././assets/components/Loader';
 
 
 stripe.setOptions({
@@ -16,21 +17,59 @@ export default class Payment extends PureComponent {
   static title = 'Card Form'
   constructor(props) {
     super(props);
-    this.state = {
-      loading: false,
-      token: null,
-      amount:'',
-      tokenId: null,
-      billId:''
+    if(this.props.route.params){
+      if(this.props.route.params.dividedBill != undefined){
+        this.state = {
+          loading: false,
+          token: null,
+          isLoading: false,
+          amount: this.props.route.params.dividedBill,
+          tokenId: null,
+          billId: '',
+          email: ''
+        }
+      }else if(this.props.route.params.totalBill != undefined){
+        this.state = {
+          loading: false,
+          token: null,
+          isLoading: false,
+          amount: this.props.route.params.totalBill,
+          tokenId: null,
+          billId: '',
+          email: ''
+        }
+      }else if(this.props.route.params.itemwise != undefined){
+        this.state = {
+          loading: false,
+          token: null,
+          isLoading: false,
+          amount: this.props.route.params.itemwise,
+          tokenId: null,
+          billId: '',
+          email: ''
+        }
+      }
+    }else{
+      this.state = {
+        loading: false,
+        token: null,
+        isLoading: false,
+        amount: '',
+        tokenId: null,
+        billId: '',
+        email: ''
+      }
     }
+    
 
+    console.warn("props :: ", this.state.amount)
 
   }
 
   componentDidMount() {
     this._getData()
-  //  this.setState({amout : this.props.route.params})
-    console.warn("props.route.params :: ",this.props)
+    //  this.setState({amout : this.props.route.params})
+    console.warn("props.route.params :: ", this.props)
 
     this.handleCardPayPress();
   }
@@ -55,7 +94,6 @@ export default class Payment extends PureComponent {
           },
         },
       })
-
       this.setState({ loading: false, token, tokenId: token.tokenId })
     } catch (error) {
       this.props.navigation.goBack();
@@ -63,64 +101,70 @@ export default class Payment extends PureComponent {
     }
   }
 
-  async _getData(){
-    const billId =  await AsyncStorage.getItem('billId')
+  async _getData() {
+    const billId = await AsyncStorage.getItem('billId')
+    const email = await AsyncStorage.getItem('email')
+    this.setState({ email: email })
 
-    const dividedFlag =  await AsyncStorage.getItem('dividedFlag', (err, value) => {
-      if (err) {
-          console.log(err)
-      } else {
-        console.warn("df :: ",JSON.parse(value))
-          JSON.parse(value) 
-      }
-  })
+    // const dividedFlag = await AsyncStorage.getItem('dividedFlag', (err, value) => {
+    //   if (err) {
+    //     console.log(err)
+    //   } else {
+    //     console.warn("df :: ", JSON.parse(value))
+    //     JSON.parse(value)
+    //   }
+    // })
 
-    const totalFlag =  await AsyncStorage.getItem('totalFlag', (err, value) => {
-      if (err) {
-          console.log(err)
-      } else {
-        console.warn("tf :: ",JSON.parse(value))
-          JSON.parse(value) // boolean false
-      }
-  })
-
-
-    const dividedBill =  await AsyncStorage.getItem('dividedBill')
-    const totalBill =  await AsyncStorage.getItem('totalBill')
-    
-    if(totalFlag === 'true'){
-      this.setState({amount:totalBill})
-    }else if(dividedFlag === 'true'){
-      this.setState({amount:dividedBill})
-    }
+    // const totalFlag = await AsyncStorage.getItem('totalFlag', (err, value) => {
+    //   if (err) {
+    //     console.log(err)
+    //   } else {
+    //     console.warn("tf :: ", JSON.parse(value))
+    //     JSON.parse(value) // boolean false
+    //   }
+    // })
 
 
-    this.setState({billId:billId})        
-}
+    // if (totalFlag === 'true') {
+    //   const totalBill = await AsyncStorage.getItem('totalBill')
+    //   console.warn("tb ", totalBill)
+    //   this.setState({ amount: totalBill })
+    // } else if (dividedFlag === 'true') {
+    //   const dividedBill = await AsyncStorage.getItem('dividedBill')
+    //   console.warn("db ", dividedBill)
+    //   this.setState({ amount: dividedBill })
+    // }
+
+
+    this.setState({ billId: billId })
+  }
 
   makePayment = async () => {
+    console.warn("ampunt ::: ", this.state.amount)
+    var self = this
+    var amountInNumber = parseInt(this.state.amount)
+    if (amountInNumber != 0) {
 
-    if (this.state.amount != null) {
       //this.setState({amount: this.state.amount*100})
-      // this.setState({ loading: true })
-      console.warn("token:,", this.state.tokenId)
-      console.warn("this.state.billId :: ",this.state.billId)
-      console.warn('this.state.amount ::: ',this.state.amount)
-      var self = this
+      self.setState({ isLoading: true })
+      // console.warn("ampunt ::: ",this.state.amount)
+
       axios.post('https://checkoutapp1.herokuapp.com/api/stripe', {
         token: this.state.tokenId,
-        amount: this.state.amount,
-        billId:this.state.billId
+        amount: amountInNumber,
+        billId: this.state.billId,
+        userId: this.state.email
       })
         .then(function (response) {
-          // this.setState({ loading: false })
-          ViewUtils.showAlert('Bill Paid Successfully! ')
-          self.props.navigation.navigate('Home')
-          console.log(response);
+          console.warn("response:: ", response.data);
+          self.setState({ isLoading: false })
+          ViewUtils.showToast('Bill Paid Successfully! ')
+          self.props.navigation.navigate('Invoice',{billId: self.state.billId})
+
         })
         .catch(function (error) {
-          // this.setState({ loading: false })
-          console.warn(error);
+          self.setState({ isLoading: false })
+          console.warn("errro : ", error);
         });
     } else {
       ViewUtils.showAlert('Please provide correct amount')
@@ -135,26 +179,26 @@ export default class Payment extends PureComponent {
 
     return (
       <View style={styles.container}>
-        {/* <Text style={styles.header}>
-          Card Form
-          </Text> */}
-        {/* <Text style={styles.instruction}>
-          Click button to show Card Form.
-          </Text> */}
-        {/* <Button
-          text="Enter your card details"
-          loading={loading}
-          onPress={this.handleCardPayPress}
-        /> */}
+        <View style={{ backgroundColor: '#8BC080', height: 120, justifyContent: 'center', padding: 10 }}>
+          <View style={{ marginTop: 30 }}>
+            <Text
+              style={{ textAlign: 'left', fontSize: 24, color: 'white', fontWeight: 'bold' }} >Payment</Text>
+            <Text
+              style={{ fontSize: 14, color: 'white' }}>
+              Pay bill
+              </Text>
+          </View>
+
+        </View>
         <View
-          style={styles.token}
+          style={[CommonStyles.container]}
         >
           {token &&
             <View>
               {/* <TextInput placeholder="Enter amount" placeholderTextColor="#8BC080" style={styles.TextStyle}></TextInput> */}
               <TextInput
                 value={this.state.amount}
-                editable = {false}
+                editable={false}
                 underlineColorAndroid='transparent'
                 placeholderTextColor='black'
                 placeholder="Enter amount"
@@ -164,11 +208,17 @@ export default class Payment extends PureComponent {
                 maxLength={6}
                 style={styles.input}>
               </TextInput>
-              <Button text="Make Payment"
-                onPress={this.makePayment} />
+              <View style={styles.btnContainer}>
+                <TouchableOpacity style={styles.btnStyle}
+                  onPress={() => this.makePayment()}
+                >
+                  <Text style={styles.btnText}>Make Payment</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           }
         </View>
+        <Loader loading={this.state.isLoading} />
         <View
           style={[
             CommonStyles.backButtonStyle
@@ -180,7 +230,7 @@ export default class Payment extends PureComponent {
             <Icon
               name="arrow-back"
               type="MaterialIcons"
-              style={{ color: '#000' }}
+              style={{ color: '#FFF' }}
             />
           </TouchableOpacity>
         </View>
@@ -192,9 +242,7 @@ export default class Payment extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white'
+    backgroundColor: '#f2f2f2'
   },
   header: {
     fontSize: 20,
@@ -218,4 +266,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
     alignSelf: 'center'
   },
+  btnContainer: {
+    width: '90%',
+    marginTop: 30,
+    alignSelf: 'center',
+  },
+  btnStyle: {
+    marginVertical: 10,
+    backgroundColor: '#8BC080',
+    borderRadius: 5
+  },
+  btnText: {
+    textAlign: 'center',
+    color: '#FFF',
+    fontSize: 20,
+    padding: 10,
+    fontWeight: 'bold'
+  }
 })
