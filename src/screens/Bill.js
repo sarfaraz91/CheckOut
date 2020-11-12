@@ -132,7 +132,14 @@ class Bill extends React.Component {
                                 />
                             </TouchableOpacity>
                         </View>
+                        <View style={{flexDirection:'column'}}>
                         <Text style={{ fontSize: 24, color: 'white', fontWeight: 'bold', marginLeft: 50, marginTop: 15 }}>Bill</Text>
+                        <Text
+                                style={{ fontSize: 14, color: 'white',marginLeft: 50 }}>
+                                Your bill details
+                        </Text>
+                        </View>
+                        
                     </View>
                     <View style={{ margin: 10 }}>
                         <View>

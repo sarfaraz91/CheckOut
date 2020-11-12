@@ -51,13 +51,10 @@ class Scanner extends React.Component {
         );
     }
 
-
-    render() {
-
-
+    renderScanner(){
+        
         return (
-            <View style={[CommonStyles.container, { backgroundColor: '#F7FAFE' }]}>
-                <QRCodeScanner
+            <QRCodeScanner
                     onRead={this.onSuccess}
                     // flashMode={RNCamera.Constants.FlashMode.torch}
                     topContent={
@@ -65,13 +62,16 @@ class Scanner extends React.Component {
                         <Text style={styles.textBold}>Please scan the Barcode for Payment</Text>
 
                     }
-                // bottomContent={
-
-                //     <TouchableOpacity style={styles.buttonTouchable}>
-                //         <Text style={styles.buttonText}>OK. Got it!</Text>
-                //     </TouchableOpacity>
-                // }
                 />
+        )
+    }
+
+    render() {
+
+
+        return (
+            <View style={[CommonStyles.container, { backgroundColor: '#F7FAFE' }]}>
+              {this.renderScanner()}
 
                 <View
                     style={[
@@ -114,7 +114,11 @@ class Scanner extends React.Component {
 
     componentDidMount() {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-        this._GetBillId()
+        this.props.navigation.addListener('focus', payLoad => {
+            this.renderScanner()
+            this._GetBillId()
+            })
+        
     }
 
     async _GetBillId() {

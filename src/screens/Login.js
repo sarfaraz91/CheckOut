@@ -37,7 +37,7 @@ export default class Login extends Component {
     this.setState({ isLoading: true })
 
     auth()
-      .signInWithEmailAndPassword(this.state.username, this.state.password)
+      .signInWithEmailAndPassword(this.state.username.trim(), this.state.password)
       .then((data) => {
 
         this.props.navigation.navigate('MyDrawer')

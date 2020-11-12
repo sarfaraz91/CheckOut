@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, ImageBackground, StyleSheet, TextInput, FlatList, Alert,AsyncStorage } from 'react-native';
+import { Text, View, ImageBackground, StyleSheet, TextInput, FlatList, Alert, AsyncStorage } from 'react-native';
 import CommonStyles from '../CommonStyles';
 import { Icon, Item, Picker } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -10,8 +10,6 @@ import Loader from '.././assets/components/Loader';
 
 export default class Order extends Component {
 
-
-
     constructor(props) {
         super(props);
 
@@ -20,7 +18,13 @@ export default class Order extends Component {
             itemName: '',
             itemPrice: 0,
             foodItem: [],
-            refresh: false
+            refresh: false,
+            countPizza: 0,
+            countBurger: 0,
+            countFries: 0,
+            countSalad: 0,
+            countPasta: 0
+
         };
 
 
@@ -44,7 +48,7 @@ export default class Order extends Component {
             { cancelable: false }
         );
     }
-    
+
     showAlertConfirmOrder() {
         Alert.alert(
             "Confirm Your Order",
@@ -72,7 +76,58 @@ export default class Order extends Component {
     }
 
     confirmOrder() {
-    var self = this;
+        var self = this;
+        self.setState({foodItem:[]})
+
+        console.warn("foodItem : ",this.state.foodItem)
+
+        
+
+        if (this.state.countPizza != 0) {
+            let element = {}
+            element.item = "Pizza";
+            element.price = this.state.countPizza * 70
+            this.state.foodItem.push(element)
+        }
+
+        if (this.state.countBurger != 0) {
+            let element = {}
+            element.item = "Burger";
+            element.price = this.state.countBurger * 30
+            this.state.foodItem.push(element)
+        }
+
+        if (this.state.countFries != 0) {
+            let element = {}
+            element.item = "Fries";
+            element.price = this.state.countFries * 5
+            this.state.foodItem.push(element)
+        }
+
+        if (this.state.countSalad != 0) {
+            let element = {}
+            element.item = "Salad";
+            element.price = this.state.countSalad * 10
+            this.state.foodItem.push(element)
+        }
+
+        if (this.state.countPasta != 0) {
+            let element = {}
+            element.item = "Pasta";
+            element.price = this.state.countPasta * 10
+            this.state.foodItem.push(element)
+        }
+
+        // element.item = this.state.itemName;
+        // element.price = parseInt(this.state.itemPrice);
+
+
+        
+        // this.setState({
+        //     refresh: !this.state.refresh
+        // })
+        // ViewUtils.showToast('Item is added!')
+
 
         var totalAmount = this.state.foodItem.map(x => x.price).reduce((totalAmount, current) => totalAmount + current, 0)
         self.setState({ isLoading: true })
@@ -82,19 +137,19 @@ export default class Order extends Component {
         })
             .then(function (response) {
                 // this.setState({ loading: false })      
-                console.warn("res :: ",response.data._id);
+                console.warn("res :: ", response.data._id);
                 self.setState({ isLoading: false })
-                self.setState({itemName: ''})
-                self.setState({itemPrice: 0})
-                self.setState({foodItem: []})
+                self.setState({ itemName: '' })
+                self.setState({ itemPrice: 0 })
+                self.setState({ foodItem: [] })
                 ViewUtils.showToast('Order sent successfully!')
                 AsyncStorage.setItem('billId', response.data._id)
                 self.props.navigation.navigate('Home')
             })
             .catch(function (error) {
                 self.setState({ loading: false })
-                console.warn("err:: ",error);
-              //  this.setState({ isLoading: false })
+                console.warn("err:: ", error);
+                //  this.setState({ isLoading: false })
             });
 
     }
@@ -108,15 +163,204 @@ export default class Order extends Component {
                     <View style={{ backgroundColor: '#8BC080', height: 120, justifyContent: 'center', padding: 10 }}>
                         <View style={{ marginTop: 30 }}>
                             <Text
-                                style={{ textAlign: 'left', fontSize: 24, color: 'white', fontWeight: 'bold' }} >Order</Text>
+                                style={{ textAlign: 'left', fontSize: 24, color: 'white', fontWeight: 'bold' }} >Menu</Text>
                             <Text
                                 style={{ fontSize: 14, color: 'white' }}>
-                                Order your food
+                                Add menu items to your order
                         </Text>
                         </View>
                     </View>
                     <View style={[CommonStyles.container]}>
 
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column', flex: 1, marginLeft: 20, justifyContent: 'center' }}>
+                                <Text style={{ fontSize: 24, color: 'black', fontWeight: 'bold' }}>
+                                    Pizza</Text>
+                                {this.state.countPizza != 0 ? <Text>70$x{this.state.countPizza}</Text> : <Text>70$</Text>}
+                            </View>
+
+
+                            <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 20 }}>
+
+                                <View style={Style.btnContainerItem}>
+                                    <TouchableOpacity style={Style.btnStyle}
+                                        onPress={() => {
+                                            this.setState({ countPizza: this.state.countPizza + 1 })
+                                        }}
+                                    >
+                                        <Text style={Style.btnText}>+</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <Text style={{ alignSelf: 'center', marginLeft: 30, fontSize: 20 }}>{this.state.countPizza}</Text>
+
+                                <View style={[Style.btnContainerItem, { marginLeft: 30 }]}>
+                                    <TouchableOpacity style={Style.btnStyle}
+                                        onPress={() => {
+                                            this.setState({ countPizza: this.state.countPizza - 1 })
+                                        }}
+                                    >
+                                        <Text style={Style.btnText}>-</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </View>
+
+
+
+                        </View>
+
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column', flex: 1, marginLeft: 20, justifyContent: 'center' }}>
+                                <Text style={{ fontSize: 24, color: 'black', fontWeight: 'bold' }}>
+                                    Burger</Text>
+                                {this.state.countBurger != 0 ? <Text>30$x{this.state.countBurger}</Text> : <Text>30$</Text>}
+                            </View>
+
+                            <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 20 }}>
+
+                                <View style={[Style.btnContainerItem]}>
+                                    <TouchableOpacity style={Style.btnStyle}
+                                        onPress={() => {
+                                            this.setState({ countBurger: this.state.countBurger + 1 })
+                                        }}
+                                    >
+                                        <Text style={Style.btnText}>+</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <Text style={{ alignSelf: 'center', marginLeft: 30, fontSize: 20 }}>{this.state.countBurger}</Text>
+
+                                <View style={[Style.btnContainerItem, { marginLeft: 30 }]}>
+                                    <TouchableOpacity style={Style.btnStyle}
+                                        onPress={() => {
+                                            this.setState({ countBurger: this.state.countBurger - 1 })
+                                        }}
+                                    >
+                                        <Text style={Style.btnText}>-</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </View>
+
+                        </View>
+
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column', flex: 1, marginLeft: 20, justifyContent: 'center' }}>
+                                <Text style={{ fontSize: 24, color: 'black', fontWeight: 'bold' }}>
+                                    Fries</Text>
+                                {this.state.countFries != 0 ? <Text>5$x{this.state.countFries}</Text> : <Text>5$</Text>}
+                            </View>
+
+                            <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 20 }}>
+
+                                <View style={Style.btnContainerItem}>
+                                    <TouchableOpacity style={Style.btnStyle}
+                                        onPress={() => {
+                                            this.setState({ countFries: this.state.countFries + 1 })
+                                        }}
+                                    >
+                                        <Text style={Style.btnText}>+</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <Text style={{ alignSelf: 'center', marginLeft: 30, fontSize: 20 }}>{this.state.countFries}</Text>
+
+                                <View style={[Style.btnContainerItem, { marginLeft: 30 }]}>
+                                    <TouchableOpacity style={Style.btnStyle}
+                                        onPress={() => {
+                                            this.setState({ countFries: this.state.countFries - 1 })
+                                        }}
+                                    >
+                                        <Text style={Style.btnText}>-</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </View>
+
+
+
+                        </View>
+
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column', flex: 1, marginLeft: 20, justifyContent: 'center' }}>
+                                <Text style={{ fontSize: 24, color: 'black', fontWeight: 'bold' }}>
+                                    Salad</Text>
+                                {this.state.countSalad != 0 ? <Text>10$x{this.state.countSalad}</Text> : <Text>10$</Text>}
+                            </View>
+
+                            <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 20 }}>
+
+                                <View style={Style.btnContainerItem}>
+                                    <TouchableOpacity style={Style.btnStyle}
+                                        onPress={() => {
+                                            this.setState({ countSalad: this.state.countSalad + 1 })
+                                        }}
+                                    >
+                                        <Text style={Style.btnText}>+</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <Text style={{ alignSelf: 'center', marginLeft: 30, fontSize: 20 }}>{this.state.countSalad}</Text>
+
+                                <View style={[Style.btnContainerItem, { marginLeft: 30 }]}>
+                                    <TouchableOpacity style={Style.btnStyle}
+                                        onPress={() => {
+                                            this.setState({ countSalad: this.state.countSalad - 1 })
+                                        }}
+                                    >
+                                        <Text style={Style.btnText}>-</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </View>
+
+
+
+                        </View>
+
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'column', flex: 1, marginLeft: 20, justifyContent: 'center' }}>
+                                <Text style={{ fontSize: 24, color: 'black', fontWeight: 'bold' }}>
+                                    Pasta</Text>
+                                {this.state.countPasta != 0 ? <Text>10$x{this.state.countPasta}</Text> : <Text>10$</Text>}
+                            </View>
+
+                            <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 20 }}>
+
+                                <View style={Style.btnContainerItem}>
+                                    <TouchableOpacity style={Style.btnStyle}
+                                        onPress={() => {
+                                            this.setState({ countPasta: this.state.countPasta + 1 })
+                                        }}
+                                    >
+                                        <Text style={Style.btnText}>+</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <Text style={{ alignSelf: 'center', marginLeft: 30, fontSize: 20 }}>{this.state.countPasta}</Text>
+
+                                <View style={[Style.btnContainerItem, { marginLeft: 30 }]}>
+                                    <TouchableOpacity style={Style.btnStyle}
+                                        onPress={() => {
+                                            this.setState({ countPasta: this.state.countPasta - 1 })
+                                        }}
+                                    >
+                                        <Text style={Style.btnText}>-</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </View>
+
+
+
+                        </View>
+
+                        {/* 
                         <TextInput
                             value={this.state.itemName}
                             onChangeText={val => this.setState({ itemName: val })}
@@ -164,7 +408,10 @@ export default class Order extends Component {
                                 )}
                             />
                         </View>
-                        {this.state.foodItem.length > 0 ?
+                        
+                         */}
+
+                        {/* {this.state.foodItem.length > 0 ?
                             <View style={Style.btnContainer}>
                                 <TouchableOpacity style={Style.btnStyle}
                                     onPress={() => this.showAlertConfirmOrder()}
@@ -173,7 +420,15 @@ export default class Order extends Component {
                                 </TouchableOpacity>
                             </View>
                             : console.log('no items')
-                        }
+                        } */}
+
+                        <View style={Style.btnContainer}>
+                            <TouchableOpacity style={Style.btnStyle}
+                                onPress={() => this.showAlertConfirmOrder()}
+                            >
+                                <Text style={Style.btnText}>Order</Text>
+                            </TouchableOpacity>
+                        </View>
 
 
                     </View>
@@ -226,6 +481,10 @@ const Style = StyleSheet.create({
         fontSize: 20,
         padding: 10,
         fontWeight: 'bold'
+    },
+    btnContainerItem: {
+        width: '20%',
+        alignSelf: 'center',
     },
     input: {
         marginTop: 5,

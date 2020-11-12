@@ -59,7 +59,7 @@ class Profile extends React.Component {
 
     async getImage() {
         const url = await storage()
-            .ref(`gs://comcheckout.appspot.com/${this.state.user.uid}`)
+            .ref(`gs://checkoutfyp-490fe.appspot.com/${this.state.user.uid}`)
             .getDownloadURL();
 
         this.setState({ image: url })
@@ -293,6 +293,16 @@ class Profile extends React.Component {
 
     updateProfile() {
         console.warn("this.state.user.uid :: ",this.state.user.uid)
+
+        if (this.state.image != '') {
+            var reference = storage().ref(`gs://checkoutfyp-490fe.appspot.com/${this.state.user.uid}`);
+            const task = reference.putFile(this.state.image)
+            task.then(() => {
+                console.log('Image uploaded to the bucket!');
+            });
+        }
+
+        
         database()
         .ref(`/Users/${this.state.user.uid}/`)
         .set({
@@ -306,16 +316,6 @@ class Profile extends React.Component {
              ViewUtils.showAlert("Update Successfully.")
             //console.warn("done")
         });
-
-        // if (this.state.image != '') {
-        //     var reference = storage().ref(`gs://comcheckout.appspot.com/${this.state.user.uid}`);
-        //     const task = reference.putFile(this.state.image)
-        //     task.then(() => {
-        //         console.log('Image uploaded to the bucket!');
-        //     });
-        // }
-        
-     
 
         
     }
