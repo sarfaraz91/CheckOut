@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CommonStyles from '../CommonStyles';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, FlatList,Alert,AsyncStorage } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, FlatList, Alert, AsyncStorage } from 'react-native';
 import { Icon, Input } from 'native-base';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
 import axios from 'axios';
@@ -21,23 +21,66 @@ class Bill extends React.Component {
             isLoading: false,
             user: {},
             allBills: props.route.params.res.data,
-            myBill:[],
+            myBill: [],
             billId: '',
             net_amount: 0,
-            emails:[],
-            myBill: []
+            emails: [],
+            myBill: [],
+            itemName: 'garbage',
+            isBurger: false,
+            isPizza: false,
+
+
         }
 
-    }   
+    }
 
-    async _getBill(){
-        const billId =  await AsyncStorage.getItem('billId')
-        this.setState({billId:billId})        
+    async _getBill() {
+        const billId = await AsyncStorage.getItem('billId')
+        this.setState({ billId: billId })
         const bill = this.state.allBills.filter(x => x._id == this.state.billId)
+
+        console.warn("bils : ", bill[0].foodItem)
+        var totalAmount = bill[0].foodItem.map(x => x.price).reduce((totalAmount, current) => totalAmount + current, 0)
+        this.setState({ net_amount: totalAmount })
+        //console.warn("totalAmount12 ,",totalAmount)
+
+
+        // var duplicates = bill[0].foodItem.map(name => name.item).reduce(function(acc, el, i, arr) {
+        //   if (arr.indexOf(el) !== i && acc.indexOf(el) < 0)
+        //   {
+        //       console.warn()
+        //     acc.push(el);
+        //   }
+        //   return acc;
+        // }, []);
+
+        // bill[0].foodItem.map((x,index) => {
+        //     if(x.item == duplicates[index]){
+        //         console.warn("item : ",x)
+        //     }
+        // })
+
+        // for(let i=0; i<bill[0].foodItem.length(); i++){
+        //     if(element.item == duplicates[0]){ 
+        //         console.warn("dup : ",element)
+        //     }
+        // }
+
+        // bill[0].foodItem.forEach(element => {
+
+        //     if(element.item == duplicates[0]){ 
+        //         console.warn("dup : ",element)
+        //     }
+
+        // })
+
+        // console.warn("mil :: ",mil)
+
         Object.keys(bill).forEach(key => {
-         this.setState({myBill:bill[key].foodItem})
-         this.setState({net_amount:bill[key].amount})
-       });
+            this.setState({ myBill: bill[key].foodItem })
+            // this.setState({ net_amount: bill[key].amount })
+        });
     }
 
     componentDidMount() {
@@ -51,14 +94,12 @@ class Bill extends React.Component {
                     .once("value")
                     .then(async snapshot => {
                         let emails = [];
-                       // console.warn("this.state.user.email ::: ",this.state.user.email)
                         emails.push(this.state.user.email)
                         snapshot.forEach(item => {
 
                             const temp = item.val();
                             emails.push(temp.email);
                         })
-                       // console.warn("emails ::: ",emails)
 
                         this.setState({ emails: emails });
                     });
@@ -84,34 +125,56 @@ class Bill extends React.Component {
 
     async shareBill() {
         var self = this;
-      //  self.setState({ isLoading: true })
-        // console.warn('dsadsads :: ',this.state.emails);
-
         axios.post('https://checkoutapp1.herokuapp.com/api/noti', {
             userIds: this.state.emails,
             billId: this.state.billId,
             isDivide: true
         })
             .then(function (response) {
-                console.warn('res :: ',response);
-              //  self.props.navigation.navigate('Payment')
-               // self.setState({ loading: false })      
+                console.warn('res :: ', response);
+
             })
             .catch(function (error) {
-                console.warn('err :: ',error);
+                console.warn('err :: ', error);
 
-               // self.setState({ loading: false })
             });
+
+    }
+
+    renderBillItem(item) {
+        var self = this
+        // var total = 0;
+        // var count = 0;
+        // self.state.myBill.forEach(element => {
+        //     if (element.item == item.item) {
+        //         count += 1
+        //         total += element.price
+        //     }
+        // });
+
+
+        return (
+            <View>
+                <View>
+                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+
+                        <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'row' }}>
+                            <Text style={{ flex: 1, fontSize: 14, color: 'black' }}>{item.item}</Text>
+                            <Text style={{ flex: 1, fontSize: 14, color: 'black' }}>{item.price}</Text>
+                            <Text style={{ flex: 1, fontSize: 14, color: 'black' }}>1</Text>
+                            <Text style={{ flex: 1, fontSize: 14, color: 'black' }}>${item.price}</Text>
+
+                        </View>
+
+                    </View>
+                </View>
+            </View>
+        )
 
     }
 
 
     render() {
-        
-      
-        //console.warn("ss :: ",myBill[0])
-        // this.state.myBill = myBill[0].foodItem
-        // this.state.net_amount = myBill[0].amount
 
         return (
             <View style={Style.container}>
@@ -132,53 +195,61 @@ class Bill extends React.Component {
                                 />
                             </TouchableOpacity>
                         </View>
-                        <View style={{flexDirection:'column'}}>
-                        <Text style={{ fontSize: 24, color: 'white', fontWeight: 'bold', marginLeft: 50, marginTop: 15 }}>Bill</Text>
-                        <Text
-                                style={{ fontSize: 14, color: 'white',marginLeft: 50 }}>
+                        <View style={{ flexDirection: 'column' }}>
+                            <Text style={{ fontSize: 24, color: 'white', fontWeight: 'bold', marginLeft: 50, marginTop: 15 }}>Bill</Text>
+                            <Text
+                                style={{ fontSize: 14, color: 'white', marginLeft: 50 }}>
                                 Your bill details
                         </Text>
                         </View>
-                        
+
                     </View>
-                    <View style={{ margin: 10 }}>
+                    <View style={{ marginLeft: 20, marginRight: 20, marginTop: 10 }}>
                         <View>
                             <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ flex: 1, fontSize: 20 }}>Item</Text>
-                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
-                                    <Text style={Style.TextStyle}>Price</Text>
+
+                                <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'row' }}>
+                                    <Text style={{ flex: 1, fontSize: 16, fontWeight: 'bold' }}>Item</Text>
+                                    <Text style={{ flex: 1, fontSize: 16, fontWeight: 'bold' }}>UP</Text>
+                                    <Text style={{ flex: 1, fontSize: 16, fontWeight: 'bold' }}>QTY</Text>
+                                    <Text style={{ flex: 1, fontSize: 16, fontWeight: 'bold' }}>Amount</Text>
+
                                 </View>
 
                             </View>
                         </View>
                     </View>
-                    <View style={{ marginLeft: 10, marginRight: 10 }}>
+                    <View style={{ marginLeft: 20, marginRight: 20 }}>
                         <FlatList
                             data={this.state.myBill}
-                            renderItem={({ item }) => (
-                                <View>
-                                    <View style={{ flexDirection: 'row', }}>
-                                        <Text style={{ flex: 1, fontSize: 16,color:'#8BC080' }}>{item.item}</Text>
-                                        <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-between' }}>
-                                            <Text style={{fontSize: 16,color:'#8BC080'}}>${item.price}</Text>
-                                        </View>
-
-                                    </View>
-                                </View>
-                            )}
+                            renderItem={({ item }) => this.renderBillItem(item)}
                         />
                     </View>
                     <View style={{ marginTop: 40, marginLeft: 10 }}>
                         <View>
-                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-end',marginRight:10 }}>
-                            <Text style={{ fontSize: 20,color:'#8BC080' }}>Total = ${this.state.net_amount}</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-end', marginRight: 10 }}>
+                                <Text style={{ fontSize: 20, color: '#8BC080' }}>Subtotal = ${this.state.net_amount}</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-end', marginRight: 10 }}>
+                                <Text style={{ fontSize: 20, color: '#8BC080' }}>Total Tax = 1.44</Text>
+                            </View>
+                        </View>
+                        <View>
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-end', marginRight: 10 }}>
+                                <Text style={{ fontSize: 20, color: '#8BC080' }}>Total = ${this.state.net_amount+1.44}</Text>
                             </View>
                         </View>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'flex-end', }}>
                         <View style={Style.btnContainer}>
                             <TouchableOpacity style={Style.btnStyle}
-                                onPress={() => this.props.navigation.navigate('Payment')}
+                                onPress={() => {
+                                    let totalAmount = this.state.net_amount + 1.44
+                                    console.warn("this.state.net_amount :: ", totalAmount)
+                                    this.props.navigation.navigate('Payment', { net_amount: totalAmount.toString() })
+                                }}
                             >
                                 <Text style={Style.btnText}>Pay Full Bill</Text>
                             </TouchableOpacity>

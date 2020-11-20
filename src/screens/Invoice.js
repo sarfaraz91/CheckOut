@@ -36,6 +36,7 @@ export default class Invoice extends Component {
         auth().onAuthStateChanged((user) => {
             if (user) {
                 this.setState({ userId: user.uid })
+                this.setState({ email: user.email })
 
             }
         });
@@ -55,6 +56,8 @@ export default class Invoice extends Component {
             });
 
     }
+    
+
 
     _getInvoice() {
         var self = this
@@ -63,8 +66,16 @@ export default class Invoice extends Component {
             axios.get(`https://checkoutapp1.herokuapp.com/api/getInvoice/${self.state.billId}`)
                 .then(function (response) {
                     self.setState({ invoice: response.data[0] })
-                    self.setState({email: response.data[0].userId})
-                    self.setState({amountPaid: response.data[0].amount})
+                   // self.setState({email: response.data[0].userId})
+
+                    response.data.forEach(element => {
+                        if(element.userId == self.state.email){
+                            self.setState({amountPaid: element.amount})
+                            console.warn("yes hai")
+                        }
+                    });
+
+                   // self.setState({amountPaid: response.data[0].amount})
                     self.setState({ isLoading: false })
                    console.warn('invoice res ::', response.data[0].amount);
                 })
@@ -105,12 +116,12 @@ export default class Invoice extends Component {
 
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={Style.textStyle}>Bill amount Paid:</Text>
-                            <Text style={Style.textStyle2}>${this.state.amountPaid}</Text>
+                            <Text style={Style.textStyle2}>${this.state.amountPaid.toFixed(2)}</Text>
                         </View>
 
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={Style.textStyle}>Bill amount Remaining:</Text>
-                            <Text style={Style.textStyle2}>${this.state.amountLeft}</Text>
+                            <Text style={Style.textStyle2}>${this.state.amountLeft.toFixed(2)}</Text>
                         </View>
                         
                         <View style={Style.btnContainer}>

@@ -7,6 +7,7 @@ import CommonStyles from '../CommonStyles';
 import { Icon, Input } from 'native-base';
 import { ViewUtils } from '../Utils';
 import Loader from '.././assets/components/Loader';
+import auth from '@react-native-firebase/auth';
 
 
 stripe.setOptions({
@@ -48,28 +49,47 @@ export default class Payment extends PureComponent {
           billId: '',
           email: ''
         }
-      }
-    }else{
-      this.state = {
-        loading: false,
-        token: null,
-        isLoading: false,
-        amount: '',
-        tokenId: null,
-        billId: '',
-        email: ''
+      }else if(this.props.route.params.net_amount != undefined){
+        this.state = {
+          loading: false,
+          token: null,
+          isLoading: false,
+          amount: this.props.route.params.net_amount,
+          tokenId: null,
+          billId: '',
+          email: '',
+          
+        }
       }
     }
-    
+    // else{
+    //   this.state = {
+    //     loading: false,
+    //     token: null,
+    //     isLoading: false,
+    //     amount: '',
+    //     tokenId: null,
+    //     billId: '',
+    //     email: ''
+    //   }
+    // }
 
     console.warn("props :: ", this.state.amount)
 
   }
 
+  getUser = () => {
+    auth().onAuthStateChanged((user) => {
+        if (user) {
+            this.setState({ email: user.email })
+        }
+    });
+}
+
+
   componentDidMount() {
+    this.getUser()
     this._getData()
-    //  this.setState({amout : this.props.route.params})
-    console.warn("props.route.params :: ", this.props)
 
     this.handleCardPayPress();
   }
@@ -78,7 +98,6 @@ export default class Payment extends PureComponent {
     try {
       this.setState({ loading: true, token: null })
       const token = await stripe.paymentRequestWithCardForm({
-        // Only iOS support this options
         smsAutofillDisabled: true,
         requiredBillingAddressFields: 'full',
         prefilledInformation: {
@@ -103,8 +122,12 @@ export default class Payment extends PureComponent {
 
   async _getData() {
     const billId = await AsyncStorage.getItem('billId')
-    const email = await AsyncStorage.getItem('email')
-    this.setState({ email: email })
+    // const email = await AsyncStorage.getItem('email')
+
+    // console.warn("email :: ",email)
+    console.warn("billId :: ",billId)
+
+   // this.setState({ email: email })
 
     // const dividedFlag = await AsyncStorage.getItem('dividedFlag', (err, value) => {
     //   if (err) {
@@ -142,10 +165,16 @@ export default class Payment extends PureComponent {
   makePayment = async () => {
     console.warn("ampunt ::: ", this.state.amount)
     var self = this
-    var amountInNumber = parseInt(this.state.amount)
+    var amountInNumber = parseFloat(this.state.amount)
+
+    console.warn("this.state.tokenId :: ",this.state.tokenId)
+    console.warn("amountInNumber :: ",amountInNumber)
+    console.warn("this.state.billId :: ",this.state.billId)
+    console.warn("this.state.email :: ",this.state.email)
+
+
     if (amountInNumber != 0) {
 
-      //this.setState({amount: this.state.amount*100})
       self.setState({ isLoading: true })
       // console.warn("ampunt ::: ",this.state.amount)
 
@@ -156,9 +185,14 @@ export default class Payment extends PureComponent {
         userId: this.state.email
       })
         .then(function (response) {
-          console.warn("response:: ", response.data);
+          console.warn("response:: ", response.data.status);
           self.setState({ isLoading: false })
-          ViewUtils.showToast('Bill Paid Successfully! ')
+          if(response.data.status == "paid"){
+            ViewUtils.showToast('Full Payment Recieved! ')
+          }else{
+            ViewUtils.showToast('Partial Payment Recieved! ')
+          }
+          
           self.props.navigation.navigate('Invoice',{billId: self.state.billId})
 
         })
@@ -176,7 +210,7 @@ export default class Payment extends PureComponent {
 
   render() {
     const { loading, token } = this.state
-
+    console.warn("token :: ",token)
     return (
       <View style={styles.container}>
         <View style={{ backgroundColor: '#8BC080', height: 120, justifyContent: 'center', padding: 10 }}>
@@ -193,9 +227,7 @@ export default class Payment extends PureComponent {
         <View
           style={[CommonStyles.container]}
         >
-          {token &&
             <View>
-              {/* <TextInput placeholder="Enter amount" placeholderTextColor="#8BC080" style={styles.TextStyle}></TextInput> */}
               <TextInput
                 value={this.state.amount}
                 editable={false}
@@ -216,7 +248,7 @@ export default class Payment extends PureComponent {
                 </TouchableOpacity>
               </View>
             </View>
-          }
+          
         </View>
         <Loader loading={this.state.isLoading} />
         <View

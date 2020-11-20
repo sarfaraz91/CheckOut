@@ -22,7 +22,8 @@ export default class Itemwise extends Component {
             billId: 'props.route.params.billId',
             checked:[],
             items: JSON.parse(props.route.params.foodItem),
-            sum:0
+            sum:0,
+            taxPerItem:0
         };
 
         console.warn("items :: ", props.route.params.foodItem)
@@ -31,6 +32,15 @@ export default class Itemwise extends Component {
 
 
     componentDidMount() {
+        console.warn("items :: ", this.state.items.length)
+        this.state.taxPerItem = 1.44/this.state.items.length
+        console.warn("this.state.taxPerItem : ",this.state.taxPerItem)
+
+        this.state.items.forEach(element => {
+            element.price = element.price + this.state.taxPerItem
+        });;
+        console.warn("this.state.items : ",this.state.items)
+
 
         auth().onAuthStateChanged((user) => {
             if (user) {

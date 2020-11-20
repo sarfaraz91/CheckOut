@@ -26,15 +26,17 @@ class App extends React.Component {
         let that = this;
         const currentRouteName = that.navigationRef.getCurrentRoute().name
         console.warn("currentRouteName :: ",currentRouteName)
-        console.warn("ss : ",message.data['foodItem'])
+        console.warn("ss : ",message)
 
         var dividedBill = message.data['dividedBill'];
         var totalBill = message.data['totalBill'];
         var foodItem = message.data['foodItem']
-        
+        var billId = message.data['bill']
+
         AsyncStorage.setItem('dividedBill', dividedBill)
         AsyncStorage.setItem('totalBill', totalBill)
-
+        AsyncStorage.setItem('billId', billId)
+        console.warn("totalBill :: ",totalBill)
 
         Alert.alert(
           'Pay Bill',
@@ -43,7 +45,7 @@ class App extends React.Component {
             {
               text: 'Pay Item wise',
               onPress: () => {
-                that.navigationRef.navigate('Itemwise', { foodItem })
+                that.navigationRef.navigate('Itemwise', { foodItem,totalBill })
               }
             },
             {

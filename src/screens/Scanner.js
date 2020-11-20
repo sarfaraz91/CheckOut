@@ -6,6 +6,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 import { BackHandler, Alert,AsyncStorage } from 'react-native';
 import axios from 'axios';
+import auth from '@react-native-firebase/auth';
 
 
 class Scanner extends React.Component {
@@ -112,7 +113,16 @@ class Scanner extends React.Component {
         return true;
     }
 
+    getUser = () => {
+        auth().onAuthStateChanged((user) => {
+            if (user) {
+                console.warn("email :: ",user.email)
+            }
+        });
+    }
+
     componentDidMount() {
+        this.getUser()
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
         this.props.navigation.addListener('focus', payLoad => {
             this.renderScanner()

@@ -77,52 +77,67 @@ export default class Order extends Component {
 
     confirmOrder() {
         var self = this;
-        self.setState({foodItem:[]})
+        self.setState({ foodItem: [] })
 
-        console.warn("foodItem : ",this.state.foodItem)
+        console.warn("foodItem : ", this.state.foodItem)
 
-        
+
 
         if (this.state.countPizza != 0) {
-            let element = {}
-            element.item = "Pizza";
-            element.price = this.state.countPizza * 70
-            this.state.foodItem.push(element)
+            for (var i = 0; i < this.state.countPizza; i++) {
+                let element = {}
+                element.item = "Pizza";
+                element.price = 12
+                this.state.foodItem.push(element)
+                console.warn("hogya")
+            }
         }
 
         if (this.state.countBurger != 0) {
-            let element = {}
-            element.item = "Burger";
-            element.price = this.state.countBurger * 30
-            this.state.foodItem.push(element)
+            for (var i = 0; i < this.state.countBurger; i++) {
+                let element = {}
+                element.item = "Burger";
+                element.price = 8
+                this.state.foodItem.push(element)
+            }
+
         }
 
         if (this.state.countFries != 0) {
-            let element = {}
-            element.item = "Fries";
-            element.price = this.state.countFries * 5
-            this.state.foodItem.push(element)
+            for (var i = 0; i < this.state.countFries; i++) {
+                let element = {}
+                element.item = "Fries";
+                element.price = 5
+                this.state.foodItem.push(element)
+            }
+
         }
 
         if (this.state.countSalad != 0) {
-            let element = {}
-            element.item = "Salad";
-            element.price = this.state.countSalad * 10
-            this.state.foodItem.push(element)
+            for (var i = 0; i < this.state.countSalad; i++) {
+                let element = {}
+                element.item = "Salad";
+                element.price = 10
+                this.state.foodItem.push(element)
+            }
+
         }
 
         if (this.state.countPasta != 0) {
-            let element = {}
-            element.item = "Pasta";
-            element.price = this.state.countPasta * 10
-            this.state.foodItem.push(element)
+            for (var i = 0; i < this.state.countPasta; i++) {
+                let element = {}
+                element.item = "Pasta";
+                element.price = 10
+                this.state.foodItem.push(element)
+            }
+
         }
 
         // element.item = this.state.itemName;
         // element.price = parseInt(this.state.itemPrice);
 
 
-        
+
         // this.setState({
         //     refresh: !this.state.refresh
         // })
@@ -130,10 +145,11 @@ export default class Order extends Component {
 
 
         var totalAmount = this.state.foodItem.map(x => x.price).reduce((totalAmount, current) => totalAmount + current, 0)
+        console.warn("totalAmount :: ",totalAmount)
         self.setState({ isLoading: true })
         axios.post('https://checkoutapp1.herokuapp.com/api/bills', {
             foodItem: this.state.foodItem,
-            amount: totalAmount,
+            amount: totalAmount+1.44,
         })
             .then(function (response) {
                 // this.setState({ loading: false })      
@@ -176,7 +192,7 @@ export default class Order extends Component {
                             <View style={{ flexDirection: 'column', flex: 1, marginLeft: 20, justifyContent: 'center' }}>
                                 <Text style={{ fontSize: 24, color: 'black', fontWeight: 'bold' }}>
                                     Pizza</Text>
-                                {this.state.countPizza != 0 ? <Text>70$x{this.state.countPizza}</Text> : <Text>70$</Text>}
+                                {this.state.countPizza != 0 ? <Text>12$x{this.state.countPizza}</Text> : <Text>12$</Text>}
                             </View>
 
 
@@ -215,7 +231,7 @@ export default class Order extends Component {
                             <View style={{ flexDirection: 'column', flex: 1, marginLeft: 20, justifyContent: 'center' }}>
                                 <Text style={{ fontSize: 24, color: 'black', fontWeight: 'bold' }}>
                                     Burger</Text>
-                                {this.state.countBurger != 0 ? <Text>30$x{this.state.countBurger}</Text> : <Text>30$</Text>}
+                                {this.state.countBurger != 0 ? <Text>8$x{this.state.countBurger}</Text> : <Text>8$</Text>}
                             </View>
 
                             <View style={{ flex: 3, flexDirection: 'row', justifyContent: 'flex-end', marginRight: 20 }}>
